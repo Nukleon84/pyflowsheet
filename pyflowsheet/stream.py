@@ -14,6 +14,7 @@ class Stream(object):
         self.dashArray = None
         self.manualRouting = []
         self.showPoints = False
+        self.labelOffset = (0, 10)
 
     def draw(self, ctx, grid, minx, miny):
 
@@ -32,7 +33,9 @@ class Stream(object):
 
             startAnchor = points[0]
 
-        ctx.path(points, None, self.lineColor, self.lineSize, False, self.dashArray)
+        ctx.path(
+            points, None, self.lineColor, self.lineSize, False, self.dashArray, True
+        )
 
         if self.showPoints:
             for p in points:
@@ -43,7 +46,10 @@ class Stream(object):
                     1,
                 )
 
-        textAnchor = (startAnchor[0], startAnchor[1] + 10)
+        textAnchor = (
+            startAnchor[0] + self.labelOffset[0],
+            startAnchor[1] + self.labelOffset[1],
+        )
         ctx.text(
             textAnchor,
             text=self.id,
@@ -137,5 +143,7 @@ class Stream(object):
             p = (step[0] * gridsize + minx, step[1] * gridsize + miny)
             points.append(p)
         # points.append(endAnchor)
-        points.append(self.toPort.get_position())
+        realendpoint = self.toPort.get_position()
+        if realendpoint[0] != points[-1][0] or realendpoint[1] != points[-1][1]:
+            points.append(realendpoint)
         return points, startAnchor

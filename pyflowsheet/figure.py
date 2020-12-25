@@ -1,8 +1,23 @@
 from .unitoperation import UnitOperation
 from .port import Port
 
-import base64
-from io import BytesIO
+import importlib.util
+
+package_name = "matplotlib"
+spec = importlib.util.find_spec(package_name)
+
+if spec is None:
+    Warning(
+        "Matplotlib is not installed. You cannot render tables. Please install matplotlib first"
+    )
+    PYFLOWSHEET_MATPLOTLIB_MISSING = True
+else:
+    import matplotlib.pyplot as plt
+    import base64
+    from io import BytesIO
+
+    plt.ioff()
+    PYFLOWSHEET_MATPLOTLIB_MISSING = False
 
 
 class Figure(UnitOperation):
@@ -22,16 +37,24 @@ class Figure(UnitOperation):
         return
 
     def draw(self, ctx):
+        if not PYFLOWSHEET_MATPLOTLIB_MISSING:
+            tmpfile = BytesIO()
+            self.fig.savefig(tmpfile, format="png")
+            encoded = base64.b64encode(tmpfile.getvalue()).decode("utf-8")
+            data = "data:image/png;base64,{}".format(encoded)
+            ctx.image(data, self.position, self.size)
+        else:
+            start = (self.position[0], self.position[1])
+            end = (
+                self.position[0] + self.size[0],
+                self.position[1] + self.size[1],
+            )
+            ctx.line(start, end, (255, 0, 0), self.lineSize)
 
-        tmpfile = BytesIO()
-        self.fig.savefig(tmpfile, format="png")
-        encoded = base64.b64encode(tmpfile.getvalue()).decode("utf-8")
+            start = (self.position[0] + self.size[0], self.position[1])
+            end = (self.position[0], self.position[1] + self.size[1])
+            ctx.line(start, end, (255, 0, 0), self.lineSize)
 
-        data = "data:image/png;base64,{}".format(encoded)
-
-        # html = self.data.to_html()
-        # ctx.html(html, self.position, self.size)
-        ctx.image(data, self.position, self.size)
         ctx.rectangle(
             [
                 self.position,

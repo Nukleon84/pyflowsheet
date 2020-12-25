@@ -5,6 +5,7 @@ import os
 from setuptools import setup
 
 AUTHOR_NAME = "Jochen Steimel"
+AUTHOR_EMAIL = "jochen.steimel@googlemail.com"
 
 
 def read(fname):
@@ -19,6 +20,7 @@ setup(
     version="0.1.0",
     description="A Python library to create process flow diagrams (PFD) for process engineering using SVG drawings.",
     author=AUTHOR_NAME,
+    email=AUTHOR_EMAIL,
     url="https://github.com/nukleon84/pyflowsheet",
     python_requires=">=3.7",
     packages=["pyflowsheet"],
@@ -28,6 +30,7 @@ setup(
     platforms="OS Independent",
     license="MIT License",
     install_requires=["svgwrite", "pathfinding"],
+    extra_requires={"plots": "matplotlib"},
     classifiers=[
         "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: MIT License",

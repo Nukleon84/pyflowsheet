@@ -12,8 +12,7 @@ from .mixer import Mixer
 from .splitter import Splitter
 from .enums import VerticalLabelAlignment, HorizontalLabelAlignment
 from .bitmapcontext import BitmapContext
-from .table import Table
-from .figure import Figure
+
 from .textelement import TextElement
 
 from .svgcontext import SvgContext

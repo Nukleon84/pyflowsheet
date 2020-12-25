@@ -3,11 +3,30 @@ from .foreignObject import ForeignObject
 
 
 class SvgContext(object):
-    def __init__(self, filename, backgroundColor=None):
+    def __init__(self, filename, backgroundColor=(255, 255, 255)):
         self.dwg = svgwrite.Drawing(filename, profile="full")
         self.g = None
         self.gstack = []
         self.bounds = [1e6, 1e6, 200, 200]
+
+        self.marker = self.dwg.marker(
+            insert=(2, 2),
+            orient="auto",
+            size=(4, 4),
+        )
+        # red point as marker
+        path = svgwrite.path.Path(
+            stroke_width=1,
+        )
+        path.push("M0,0")
+        path.push("V4")
+        path.push("L2,2")
+        path.push("Z")
+
+        self.marker.add(path)
+
+        # add marker to defs section of the drawing
+        self.dwg.defs.add(self.marker)
 
         if backgroundColor != None:
             self.dwg.attribs["style"] = f"background-color:rgb{backgroundColor[0:3]}"
@@ -106,7 +125,16 @@ class SvgContext(object):
         )
         return
 
-    def path(self, points, fillColor, lineColor, lineSize, close=False, dashArray=None):
+    def path(
+        self,
+        points,
+        fillColor,
+        lineColor,
+        lineSize,
+        close=False,
+        dashArray=None,
+        endMarker=False,
+    ):
 
         minx = min([(p[0]) for p in points])
         maxx = max([(p[0]) for p in points])
@@ -119,6 +147,10 @@ class SvgContext(object):
             stroke=f"rgb{lineColor[0:3]}",
             stroke_width=lineSize,
         )
+
+        # if self.g != None:
+        #    self.g.attribs["stroke"] = f"rgb{lineColor[0:3]}"
+
         if fillColor != None:
             path.attribs["fill"] = f"rgb{fillColor[0:3]}"
         else:
@@ -135,6 +167,8 @@ class SvgContext(object):
         if close:
             path.push(f"Z")
 
+        if endMarker:
+            path.set_markers((None, False, self.marker))
         self.g.add(path)
         return
 
@@ -182,7 +216,8 @@ class SvgContext(object):
         if self.g != None:
             self.gstack.append(self.g)
 
-        self.g = self.dwg.g(id=element.id + "T")
+        safeId = element.id.replace(" ", "-")
+        self.g = self.dwg.g(id=safeId + "T")
 
         if element.flipHorizontal:
             self.g.attribs[
