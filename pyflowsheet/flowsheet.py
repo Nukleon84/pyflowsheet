@@ -42,6 +42,27 @@ class Flowsheet(object):
             self.unitOperations[u.id] = u
         return
 
+    def unit(self, unitoperation):
+        """Add a new unit operation to the flowsheet and return a reference
+
+        Raises:
+            ValueError: If None is passed this function will raise a ValueError.
+                        If the id of the UnitOperation is already present in the flowsheet a value error will be raised.
+
+        Returns:
+            UnitOperation: The UnitOperation object passed into the function as an argument.
+        """
+        if unitoperation is None:
+            raise ValueError(
+                "unitoperation must be an object derived from the UnitOperation class!"
+            )
+        if unitoperation.id in self.unitOperations:
+            raise ValueError(
+                "The id of unitoperation is already used within the flowsheet. Please provide a unique id. If you want to override a specific unit operation, access it directly with the flowsheet.unitoperations[] accessor."
+            )
+        self.unitOperations[unitoperation.id] = unitoperation
+        return unitoperation
+
     def connect(self, name, fromPort, toPort):
         """Connect two ports of two unit operations with a stream.
 
@@ -50,6 +71,11 @@ class Flowsheet(object):
             fromPort (Port): The source port from which to route the stream
             toPort (Port): The destination port to which to route the stream
         """
+        if name in self.streams:
+            raise ValueError(
+                "The id of the stream is already used within the flowsheet. Please provide a unique id. If you want to override a specific stream, access it directly with the flowsheet.streams[] accessor."
+            )
+
         self.streams[name] = Stream(name, fromPort, toPort)
         return
 
@@ -119,17 +145,7 @@ class Flowsheet(object):
                     )
 
         ctx.endGroup()
-
         return
-        # ctx.circle(
-        #     [(x - 5, y - 5), (x + 5, y + 5)],
-        #     (64, 64, 64, 255),
-        #     (64, 64, 64, 255),
-        #     1,
-        # )
-        # ctx.circle(
-        #     [(x - 5, y - 5), (x + 5, y + 5)], None, (64, 64, 64, 255), 1
-        # )
 
     def callout(self, text, position):
         text = TextElement(text, position)

@@ -15,7 +15,6 @@ The essence of semantic versioning is a 3-part MAJOR.MINOR.MAINTENANCE numbering
 ## Version 0.1.0 (23-12-2020)
 * Alpha version
 * Basic drawing functions implemented
-* [Pillow](https://github.com/python-pillow/Pillow) backend for bitmap output (unfinished)
 * [svgwrite](https://github.com/mozman/svgwrite) backend for vector output
 * Limited library of unit operations
   * Mixer / Splitter

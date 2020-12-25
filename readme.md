@@ -1,9 +1,9 @@
 # Pyflowsheet Project
 
 ## Mission Statement
-This library is intended to support engineers creating simple process flow diagrams (PFD) from code, without the need for a complex chart drawing tool or CAD program.
+This project is a Python package that is intended to support engineers in creating simple process flow diagrams (PFD) from code, without the need for a complex chart drawing tool or CAD program.
 
-The main use case would be to visualize flowsheets generated in textual modeling languages and to present results in a graphical manner.
+The main use case is the visualization of flowsheets generated in textual modeling languages / process simulators and to present results in a graphical manner.
 
 This package is not intended to replace CAD applications or to create printer-ready Process Flow Diagrams: this is a tool for a process engineer to support internal communication and process documentation.
 
@@ -12,7 +12,9 @@ This project is very young and in the unstable alpha Phase. The public interface
 
 The documentation is just being set up, and will be gradually completed as more and more functions stabilize. 
 
-    **Remark:** The routing is done via the Dijkstra algorithm as implemented in the pathfinding library, with a very simple heuristic to discourage turning/staircasing. This may not always work and produce nice-looking streams. If you need more control over the stream routing, pyflowsheet provides a manual override of the corner points of the stream path.
+**Remark:**
+
+     The routing is done via the Dijkstra algorithm as implemented in the pathfinding library, with a very simple heuristic to discourage turning/staircasing. This may not always work and produce nice-looking streams. If you need more control over the stream routing, pyflowsheet provides a manual override of the corner points of the stream path.
 
 ## How to install
 
@@ -22,6 +24,12 @@ If you want to install the optional dependency Matplotlib you can instead instal
 
 ```pip install pyflowsheet[plots]```
 
+### Dependencies
+* [svgwrite](https://github.com/mozman/svgwrite) 
+* [python-pathfinding package](https://github.com/brean/python-pathfinding)
+* Pillow (optional)
+* Matplotlib (optional)
+* Pandas (optional)
 
 # Examples
 

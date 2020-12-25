@@ -8,7 +8,7 @@ spec = importlib.util.find_spec(package_name)
 
 if spec is None:
     Warning(
-        "Matplotlib is not installed. You cannot render tables. Please install matplotlib first"
+        "Matplotlib is not installed. You cannot render tables. Please install matplotlib first!"
     )
     PYFLOWSHEET_MATPLOTLIB_MISSING = True
 else:

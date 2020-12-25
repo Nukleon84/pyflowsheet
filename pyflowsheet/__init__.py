@@ -11,9 +11,8 @@ from .heatexchanger import HeatExchanger
 from .mixer import Mixer
 from .splitter import Splitter
 from .enums import VerticalLabelAlignment, HorizontalLabelAlignment
-from .bitmapcontext import BitmapContext
+from .port import Port
 
 from .textelement import TextElement
 
 from .svgcontext import SvgContext
-from .port import Port

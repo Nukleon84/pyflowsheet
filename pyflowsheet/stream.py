@@ -19,7 +19,7 @@ class Stream(object):
     def draw(self, ctx, grid, minx, miny):
 
         if len(self.manualRouting) == 0:
-            points, startAnchor = self.calculateAutoRoute(minx, miny, grid)
+            points, startAnchor = self._calculateAutoRoute(minx, miny, grid)
         else:
             points = []
             points.append(self.fromPort.get_position())
@@ -29,8 +29,6 @@ class Stream(object):
                 points.append(p)
 
             points.append(self.toPort.get_position())
-            # self.manualRouting
-
             startAnchor = points[0]
 
         ctx.path(
@@ -62,7 +60,7 @@ class Stream(object):
 
         return
 
-    def calculateAutoRoute(self, minx, miny, grid):
+    def _calculateAutoRoute(self, minx, miny, grid):
         normalLength = 10
         points = []
         gridsize = 10
@@ -120,29 +118,22 @@ class Stream(object):
         grid.node(ex, ey).walkable = True
         grid.node(scx, scy).walkable = True
         grid.node(ecx, ecy).walkable = True
-        # finder = DijkstraFinder(diagonal_movement=DiagonalMovement.never)
+
         finder = Pathfinder()
         path, _ = finder.find_path(start, end, grid)
-        # path = rectifyPath(path, grid, end)
-        # path = compressPath(path)
-        w = 10
 
-        # grid.node(scx, scy).weight += w
+        w = 10
 
         for step in path:
             grid.node(step[0], step[1]).weight += w
-            # grid.node(step[0], step[1]).walkable = False
-        # grid.node(ecx, ecy).weight += w
 
         path = compressPath(path)
-        # path = rectifyPath(path, grid, end)
 
         points.append(self.fromPort.get_position())
-        # points.append(startAnchor)
         for step in path:
             p = (step[0] * gridsize + minx, step[1] * gridsize + miny)
             points.append(p)
-        # points.append(endAnchor)
+
         realendpoint = self.toPort.get_position()
         if realendpoint[0] != points[-1][0] or realendpoint[1] != points[-1][1]:
             points.append(realendpoint)
