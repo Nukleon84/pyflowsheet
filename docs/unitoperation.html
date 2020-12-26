@@ -37,7 +37,7 @@ class UnitOperation(object):
         self.id = id
         self.name = name
         self.description = description
-        self.lineColor = (64, 64, 64, 255)
+        self.lineColor = (0, 0, 0, 255)
         self.fillColor = (255, 255, 255, 255)
         self.textColor = (0, 0, 0, 255)
         self.size = size
@@ -73,6 +73,14 @@ class UnitOperation(object):
                     p.relativePosition[1],
                 )
                 p.normal = (p.normal[0] * -1, p.normal[1])
+        if axis.lower() == &#34;vertical&#34;:
+            self.flipVertical = True
+            for p in self.ports.values():
+                p.relativePosition = (
+                    (p.relativePosition[0]),
+                    1 - p.relativePosition[1],
+                )
+                p.normal = (p.normal[0], p.normal[1] * -1)
 
         return
 
@@ -165,14 +173,15 @@ class UnitOperation(object):
     def drawTextLayer(self, ctx):
         # for p in self.ports.values():
         #    p.draw(ctx)
-        insert, align = self.getTextAnchor()
-        ctx.text(
-            insert,
-            text=self.id,
-            fontFamily=self.fontFamily,
-            textColor=self.textColor,
-            textAnchor=align,
-        )
+        if self.showTitle:
+            insert, align = self.getTextAnchor()
+            ctx.text(
+                insert,
+                text=self.id,
+                fontFamily=self.fontFamily,
+                textColor=self.textColor,
+                textAnchor=align,
+            )
         return</code></pre>
 </details>
 </section>
@@ -202,7 +211,7 @@ class UnitOperation(object):
         self.id = id
         self.name = name
         self.description = description
-        self.lineColor = (64, 64, 64, 255)
+        self.lineColor = (0, 0, 0, 255)
         self.fillColor = (255, 255, 255, 255)
         self.textColor = (0, 0, 0, 255)
         self.size = size
@@ -238,6 +247,14 @@ class UnitOperation(object):
                     p.relativePosition[1],
                 )
                 p.normal = (p.normal[0] * -1, p.normal[1])
+        if axis.lower() == &#34;vertical&#34;:
+            self.flipVertical = True
+            for p in self.ports.values():
+                p.relativePosition = (
+                    (p.relativePosition[0]),
+                    1 - p.relativePosition[1],
+                )
+                p.normal = (p.normal[0], p.normal[1] * -1)
 
         return
 
@@ -330,25 +347,29 @@ class UnitOperation(object):
     def drawTextLayer(self, ctx):
         # for p in self.ports.values():
         #    p.draw(ctx)
-        insert, align = self.getTextAnchor()
-        ctx.text(
-            insert,
-            text=self.id,
-            fontFamily=self.fontFamily,
-            textColor=self.textColor,
-            textAnchor=align,
-        )
+        if self.showTitle:
+            insert, align = self.getTextAnchor()
+            ctx.text(
+                insert,
+                text=self.id,
+                fontFamily=self.fontFamily,
+                textColor=self.textColor,
+                textAnchor=align,
+            )
         return</code></pre>
 </details>
 <h3>Subclasses</h3>
 <ul class="hlist">
 <li><a title="pyflowsheet.blackbox.BlackBox" href="blackbox.html#pyflowsheet.blackbox.BlackBox">BlackBox</a></li>
 <li><a title="pyflowsheet.distillation.Distillation" href="distillation.html#pyflowsheet.distillation.Distillation">Distillation</a></li>
+<li><a title="pyflowsheet.figure.Figure" href="figure.html#pyflowsheet.figure.Figure">Figure</a></li>
 <li><a title="pyflowsheet.heatexchanger.HeatExchanger" href="heatexchanger.html#pyflowsheet.heatexchanger.HeatExchanger">HeatExchanger</a></li>
 <li><a title="pyflowsheet.mixer.Mixer" href="mixer.html#pyflowsheet.mixer.Mixer">Mixer</a></li>
 <li><a title="pyflowsheet.pump.Pump" href="pump.html#pyflowsheet.pump.Pump">Pump</a></li>
 <li><a title="pyflowsheet.splitter.Splitter" href="splitter.html#pyflowsheet.splitter.Splitter">Splitter</a></li>
 <li><a title="pyflowsheet.streamflag.StreamFlag" href="streamflag.html#pyflowsheet.streamflag.StreamFlag">StreamFlag</a></li>
+<li><a title="pyflowsheet.table.Table" href="table.html#pyflowsheet.table.Table">Table</a></li>
+<li><a title="pyflowsheet.textelement.TextElement" href="textelement.html#pyflowsheet.textelement.TextElement">TextElement</a></li>
 <li><a title="pyflowsheet.valve.Valve" href="valve.html#pyflowsheet.valve.Valve">Valve</a></li>
 <li><a title="pyflowsheet.vessel.Vessel" href="vessel.html#pyflowsheet.vessel.Vessel">Vessel</a></li>
 </ul>
@@ -391,14 +412,15 @@ class UnitOperation(object):
 <pre><code class="python">def drawTextLayer(self, ctx):
     # for p in self.ports.values():
     #    p.draw(ctx)
-    insert, align = self.getTextAnchor()
-    ctx.text(
-        insert,
-        text=self.id,
-        fontFamily=self.fontFamily,
-        textColor=self.textColor,
-        textAnchor=align,
-    )
+    if self.showTitle:
+        insert, align = self.getTextAnchor()
+        ctx.text(
+            insert,
+            text=self.id,
+            fontFamily=self.fontFamily,
+            textColor=self.textColor,
+            textAnchor=align,
+        )
     return</code></pre>
 </details>
 </dd>
@@ -420,6 +442,14 @@ class UnitOperation(object):
                 p.relativePosition[1],
             )
             p.normal = (p.normal[0] * -1, p.normal[1])
+    if axis.lower() == &#34;vertical&#34;:
+        self.flipVertical = True
+        for p in self.ports.values():
+            p.relativePosition = (
+                (p.relativePosition[0]),
+                1 - p.relativePosition[1],
+            )
+            p.normal = (p.normal[0], p.normal[1] * -1)
 
     return</code></pre>
 </details>

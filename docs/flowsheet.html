@@ -28,6 +28,7 @@
 </summary>
 <pre><code class="python">from .stream import Stream
 from pathfinding.core.grid import Grid
+from .textelement import TextElement
 
 
 class Flowsheet(object):
@@ -54,6 +55,11 @@ class Flowsheet(object):
         self.streams = {}
         self.showGrid = False
 
+    def addAnnotations(self, elements):
+        for e in elements:
+            self.annotations.append(e)
+        return
+
     def addUnits(self, units):
         &#34;&#34;&#34;Add a list of units to the flowsheet in one go.
 
@@ -64,6 +70,27 @@ class Flowsheet(object):
             self.unitOperations[u.id] = u
         return
 
+    def unit(self, unitoperation):
+        &#34;&#34;&#34;Add a new unit operation to the flowsheet and return a reference
+
+        Raises:
+            ValueError: If None is passed this function will raise a ValueError.
+                        If the id of the UnitOperation is already present in the flowsheet a value error will be raised.
+
+        Returns:
+            UnitOperation: The UnitOperation object passed into the function as an argument.
+        &#34;&#34;&#34;
+        if unitoperation is None:
+            raise ValueError(
+                &#34;unitoperation must be an object derived from the UnitOperation class!&#34;
+            )
+        if unitoperation.id in self.unitOperations:
+            raise ValueError(
+                &#34;The id of unitoperation is already used within the flowsheet. Please provide a unique id. If you want to override a specific unit operation, access it directly with the flowsheet.unitoperations[] accessor.&#34;
+            )
+        self.unitOperations[unitoperation.id] = unitoperation
+        return unitoperation
+
     def connect(self, name, fromPort, toPort):
         &#34;&#34;&#34;Connect two ports of two unit operations with a stream.
 
@@ -72,16 +99,18 @@ class Flowsheet(object):
             fromPort (Port): The source port from which to route the stream
             toPort (Port): The destination port to which to route the stream
         &#34;&#34;&#34;
+        if name in self.streams:
+            raise ValueError(
+                &#34;The id of the stream is already used within the flowsheet. Please provide a unique id. If you want to override a specific stream, access it directly with the flowsheet.streams[] accessor.&#34;
+            )
+
         self.streams[name] = Stream(name, fromPort, toPort)
         return
 
-    def _drawGrid(self, ctx):
+    def _calcGrid(self):
         &#34;&#34;&#34;Private helper function to rasterize the canvas and generate a course grid for pathfinding. This functions scans
         the entire canvas area and tests if a unit intersects the grid point. If any unit does so, the point is marked as
         &#34;impassable&#34; for the pathfinding algorithm.
-
-        Args:
-            ctx ([type]):  A drawing context that provides an abstraction for the primitive drawing functions.
 
         Returns:
             [2d-list]: The reachability matrix of the canvas area
@@ -95,12 +124,11 @@ class Flowsheet(object):
 
         gridsize = 10
 
-        minx = int(minx / gridsize - 5) * gridsize
-        miny = int(miny / gridsize - 5) * gridsize
-        maxx = int(maxx / gridsize + 5) * gridsize
-        maxy = int(maxy / gridsize + 5) * gridsize
+        minx = int(minx / gridsize - 8) * gridsize
+        miny = int(miny / gridsize - 8) * gridsize
+        maxx = int(maxx / gridsize + 8) * gridsize
+        maxy = int(maxy / gridsize + 8) * gridsize
 
-        ctx.startGroup(&#34;RoutingGrid&#34;)
         grid = []
 
         for y in range(miny, maxy, gridsize):
@@ -113,24 +141,44 @@ class Flowsheet(object):
                         intersectionFound = True
 
                 if intersectionFound:
-                    if self.showGrid:
-                        ctx.circle(
-                            [(x - 5, y - 5), (x + 5, y + 5)],
-                            (64, 64, 64, 255),
-                            (64, 64, 64, 255),
-                            1,
-                        )
                     row.append(0)
                 else:
-                    if self.showGrid:
-                        ctx.circle(
-                            [(x - 5, y - 5), (x + 5, y + 5)], None, (64, 64, 64, 255), 1
-                        )
                     row.append(1)
             grid.append(row)
 
-        ctx.endGroup()
         return grid, minx, miny
+
+    def _drawGrid(self, grid, ctx, minx, miny):
+        ctx.startGroup(&#34;RoutingGrid&#34;)
+
+        for y in range(grid.height):
+            for x in range(grid.width):
+                sx = minx + x * 10
+                sy = miny + y * 10
+                if not grid.node(x, y).walkable:
+                    ctx.circle(
+                        [(sx - 5, sy - 5), (sx + 5, sy + 5)],
+                        (0, 0, 0, 255),
+                        (0, 0, 0, 255),
+                        1,
+                    )
+                else:
+                    w = 255 - 10 * grid.node(x, y).weight
+                    w = max(w, 0)
+                    ctx.circle(
+                        [(sx - 5, sy - 5), (sx + 5, sy + 5)],
+                        (w, w, w, 255),
+                        (0, 0, 0, 255),
+                        1,
+                    )
+
+        ctx.endGroup()
+        return
+
+    def callout(self, text, position):
+        text = TextElement(text, position)
+        self.annotations.append(text)
+        return
 
     def draw(self, ctx):
         &#34;&#34;&#34;Draws the process flow diagram with the help of the context passed as an argument.
@@ -147,21 +195,30 @@ class Flowsheet(object):
             [type]: The same context as was passed in
         &#34;&#34;&#34;
 
-        matrix, minx, miny = self._drawGrid(ctx)
+        matrix, minx, miny = self._calcGrid()
         grid = Grid(matrix=matrix)
 
         for s in self.streams.values():
             ctx.startGroup(s.id)
             s.draw(ctx, grid, minx, miny)
             ctx.endGroup()
-            grid.cleanup()
 
+        if self.showGrid:
+            self._drawGrid(grid, ctx, minx, miny)
+
+        # print(grid.grid_str(show_weight=True))
         for u in self.unitOperations.values():
             ctx.startGroup(u.id)
             ctx.startTransformedGroup(u)
             u.draw(ctx)
             ctx.endGroup()
             u.drawTextLayer(ctx)
+            ctx.endGroup()
+
+        for e in self.annotations:
+            ctx.startGroup(e.id)
+            e.draw(ctx)
+            e.drawTextLayer(ctx)
             ctx.endGroup()
 
         return ctx</code></pre>
@@ -220,6 +277,11 @@ is made up of unit operations, streams and annotations.</p>
         self.streams = {}
         self.showGrid = False
 
+    def addAnnotations(self, elements):
+        for e in elements:
+            self.annotations.append(e)
+        return
+
     def addUnits(self, units):
         &#34;&#34;&#34;Add a list of units to the flowsheet in one go.
 
@@ -230,6 +292,27 @@ is made up of unit operations, streams and annotations.</p>
             self.unitOperations[u.id] = u
         return
 
+    def unit(self, unitoperation):
+        &#34;&#34;&#34;Add a new unit operation to the flowsheet and return a reference
+
+        Raises:
+            ValueError: If None is passed this function will raise a ValueError.
+                        If the id of the UnitOperation is already present in the flowsheet a value error will be raised.
+
+        Returns:
+            UnitOperation: The UnitOperation object passed into the function as an argument.
+        &#34;&#34;&#34;
+        if unitoperation is None:
+            raise ValueError(
+                &#34;unitoperation must be an object derived from the UnitOperation class!&#34;
+            )
+        if unitoperation.id in self.unitOperations:
+            raise ValueError(
+                &#34;The id of unitoperation is already used within the flowsheet. Please provide a unique id. If you want to override a specific unit operation, access it directly with the flowsheet.unitoperations[] accessor.&#34;
+            )
+        self.unitOperations[unitoperation.id] = unitoperation
+        return unitoperation
+
     def connect(self, name, fromPort, toPort):
         &#34;&#34;&#34;Connect two ports of two unit operations with a stream.
 
@@ -238,16 +321,18 @@ is made up of unit operations, streams and annotations.</p>
             fromPort (Port): The source port from which to route the stream
             toPort (Port): The destination port to which to route the stream
         &#34;&#34;&#34;
+        if name in self.streams:
+            raise ValueError(
+                &#34;The id of the stream is already used within the flowsheet. Please provide a unique id. If you want to override a specific stream, access it directly with the flowsheet.streams[] accessor.&#34;
+            )
+
         self.streams[name] = Stream(name, fromPort, toPort)
         return
 
-    def _drawGrid(self, ctx):
+    def _calcGrid(self):
         &#34;&#34;&#34;Private helper function to rasterize the canvas and generate a course grid for pathfinding. This functions scans
         the entire canvas area and tests if a unit intersects the grid point. If any unit does so, the point is marked as
         &#34;impassable&#34; for the pathfinding algorithm.
-
-        Args:
-            ctx ([type]):  A drawing context that provides an abstraction for the primitive drawing functions.
 
         Returns:
             [2d-list]: The reachability matrix of the canvas area
@@ -261,12 +346,11 @@ is made up of unit operations, streams and annotations.</p>
 
         gridsize = 10
 
-        minx = int(minx / gridsize - 5) * gridsize
-        miny = int(miny / gridsize - 5) * gridsize
-        maxx = int(maxx / gridsize + 5) * gridsize
-        maxy = int(maxy / gridsize + 5) * gridsize
+        minx = int(minx / gridsize - 8) * gridsize
+        miny = int(miny / gridsize - 8) * gridsize
+        maxx = int(maxx / gridsize + 8) * gridsize
+        maxy = int(maxy / gridsize + 8) * gridsize
 
-        ctx.startGroup(&#34;RoutingGrid&#34;)
         grid = []
 
         for y in range(miny, maxy, gridsize):
@@ -279,24 +363,44 @@ is made up of unit operations, streams and annotations.</p>
                         intersectionFound = True
 
                 if intersectionFound:
-                    if self.showGrid:
-                        ctx.circle(
-                            [(x - 5, y - 5), (x + 5, y + 5)],
-                            (64, 64, 64, 255),
-                            (64, 64, 64, 255),
-                            1,
-                        )
                     row.append(0)
                 else:
-                    if self.showGrid:
-                        ctx.circle(
-                            [(x - 5, y - 5), (x + 5, y + 5)], None, (64, 64, 64, 255), 1
-                        )
                     row.append(1)
             grid.append(row)
 
-        ctx.endGroup()
         return grid, minx, miny
+
+    def _drawGrid(self, grid, ctx, minx, miny):
+        ctx.startGroup(&#34;RoutingGrid&#34;)
+
+        for y in range(grid.height):
+            for x in range(grid.width):
+                sx = minx + x * 10
+                sy = miny + y * 10
+                if not grid.node(x, y).walkable:
+                    ctx.circle(
+                        [(sx - 5, sy - 5), (sx + 5, sy + 5)],
+                        (0, 0, 0, 255),
+                        (0, 0, 0, 255),
+                        1,
+                    )
+                else:
+                    w = 255 - 10 * grid.node(x, y).weight
+                    w = max(w, 0)
+                    ctx.circle(
+                        [(sx - 5, sy - 5), (sx + 5, sy + 5)],
+                        (w, w, w, 255),
+                        (0, 0, 0, 255),
+                        1,
+                    )
+
+        ctx.endGroup()
+        return
+
+    def callout(self, text, position):
+        text = TextElement(text, position)
+        self.annotations.append(text)
+        return
 
     def draw(self, ctx):
         &#34;&#34;&#34;Draws the process flow diagram with the help of the context passed as an argument.
@@ -313,15 +417,18 @@ is made up of unit operations, streams and annotations.</p>
             [type]: The same context as was passed in
         &#34;&#34;&#34;
 
-        matrix, minx, miny = self._drawGrid(ctx)
+        matrix, minx, miny = self._calcGrid()
         grid = Grid(matrix=matrix)
 
         for s in self.streams.values():
             ctx.startGroup(s.id)
             s.draw(ctx, grid, minx, miny)
             ctx.endGroup()
-            grid.cleanup()
 
+        if self.showGrid:
+            self._drawGrid(grid, ctx, minx, miny)
+
+        # print(grid.grid_str(show_weight=True))
         for u in self.unitOperations.values():
             ctx.startGroup(u.id)
             ctx.startTransformedGroup(u)
@@ -330,10 +437,31 @@ is made up of unit operations, streams and annotations.</p>
             u.drawTextLayer(ctx)
             ctx.endGroup()
 
+        for e in self.annotations:
+            ctx.startGroup(e.id)
+            e.draw(ctx)
+            e.drawTextLayer(ctx)
+            ctx.endGroup()
+
         return ctx</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
+<dt id="pyflowsheet.flowsheet.Flowsheet.addAnnotations"><code class="name flex">
+<span>def <span class="ident">addAnnotations</span></span>(<span>self, elements)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def addAnnotations(self, elements):
+    for e in elements:
+        self.annotations.append(e)
+    return</code></pre>
+</details>
+</dd>
 <dt id="pyflowsheet.flowsheet.Flowsheet.addUnits"><code class="name flex">
 <span>def <span class="ident">addUnits</span></span>(<span>self, units)</span>
 </code></dt>
@@ -356,6 +484,21 @@ is made up of unit operations, streams and annotations.</p>
     &#34;&#34;&#34;
     for u in units:
         self.unitOperations[u.id] = u
+    return</code></pre>
+</details>
+</dd>
+<dt id="pyflowsheet.flowsheet.Flowsheet.callout"><code class="name flex">
+<span>def <span class="ident">callout</span></span>(<span>self, text, position)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def callout(self, text, position):
+    text = TextElement(text, position)
+    self.annotations.append(text)
     return</code></pre>
 </details>
 </dd>
@@ -385,6 +528,11 @@ is made up of unit operations, streams and annotations.</p>
         fromPort (Port): The source port from which to route the stream
         toPort (Port): The destination port to which to route the stream
     &#34;&#34;&#34;
+    if name in self.streams:
+        raise ValueError(
+            &#34;The id of the stream is already used within the flowsheet. Please provide a unique id. If you want to override a specific stream, access it directly with the flowsheet.streams[] accessor.&#34;
+        )
+
     self.streams[name] = Stream(name, fromPort, toPort)
     return</code></pre>
 </details>
@@ -427,15 +575,18 @@ In the second stage the text layer is drawn without any transformations (i.e. ro
         [type]: The same context as was passed in
     &#34;&#34;&#34;
 
-    matrix, minx, miny = self._drawGrid(ctx)
+    matrix, minx, miny = self._calcGrid()
     grid = Grid(matrix=matrix)
 
     for s in self.streams.values():
         ctx.startGroup(s.id)
         s.draw(ctx, grid, minx, miny)
         ctx.endGroup()
-        grid.cleanup()
 
+    if self.showGrid:
+        self._drawGrid(grid, ctx, minx, miny)
+
+    # print(grid.grid_str(show_weight=True))
     for u in self.unitOperations.values():
         ctx.startGroup(u.id)
         ctx.startTransformedGroup(u)
@@ -444,7 +595,55 @@ In the second stage the text layer is drawn without any transformations (i.e. ro
         u.drawTextLayer(ctx)
         ctx.endGroup()
 
+    for e in self.annotations:
+        ctx.startGroup(e.id)
+        e.draw(ctx)
+        e.drawTextLayer(ctx)
+        ctx.endGroup()
+
     return ctx</code></pre>
+</details>
+</dd>
+<dt id="pyflowsheet.flowsheet.Flowsheet.unit"><code class="name flex">
+<span>def <span class="ident">unit</span></span>(<span>self, unitoperation)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Add a new unit operation to the flowsheet and return a reference</p>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>If None is passed this function will raise a ValueError.
+If the id of the UnitOperation is already present in the flowsheet a value error will be raised.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>UnitOperation</code></dt>
+<dd>The UnitOperation object passed into the function as an argument.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def unit(self, unitoperation):
+    &#34;&#34;&#34;Add a new unit operation to the flowsheet and return a reference
+
+    Raises:
+        ValueError: If None is passed this function will raise a ValueError.
+                    If the id of the UnitOperation is already present in the flowsheet a value error will be raised.
+
+    Returns:
+        UnitOperation: The UnitOperation object passed into the function as an argument.
+    &#34;&#34;&#34;
+    if unitoperation is None:
+        raise ValueError(
+            &#34;unitoperation must be an object derived from the UnitOperation class!&#34;
+        )
+    if unitoperation.id in self.unitOperations:
+        raise ValueError(
+            &#34;The id of unitoperation is already used within the flowsheet. Please provide a unique id. If you want to override a specific unit operation, access it directly with the flowsheet.unitoperations[] accessor.&#34;
+        )
+    self.unitOperations[unitoperation.id] = unitoperation
+    return unitoperation</code></pre>
 </details>
 </dd>
 </dl>
@@ -467,10 +666,13 @@ In the second stage the text layer is drawn without any transformations (i.e. ro
 <ul>
 <li>
 <h4><code><a title="pyflowsheet.flowsheet.Flowsheet" href="#pyflowsheet.flowsheet.Flowsheet">Flowsheet</a></code></h4>
-<ul class="">
+<ul class="two-column">
+<li><code><a title="pyflowsheet.flowsheet.Flowsheet.addAnnotations" href="#pyflowsheet.flowsheet.Flowsheet.addAnnotations">addAnnotations</a></code></li>
 <li><code><a title="pyflowsheet.flowsheet.Flowsheet.addUnits" href="#pyflowsheet.flowsheet.Flowsheet.addUnits">addUnits</a></code></li>
+<li><code><a title="pyflowsheet.flowsheet.Flowsheet.callout" href="#pyflowsheet.flowsheet.Flowsheet.callout">callout</a></code></li>
 <li><code><a title="pyflowsheet.flowsheet.Flowsheet.connect" href="#pyflowsheet.flowsheet.Flowsheet.connect">connect</a></code></li>
 <li><code><a title="pyflowsheet.flowsheet.Flowsheet.draw" href="#pyflowsheet.flowsheet.Flowsheet.draw">draw</a></code></li>
+<li><code><a title="pyflowsheet.flowsheet.Flowsheet.unit" href="#pyflowsheet.flowsheet.Flowsheet.unit">unit</a></code></li>
 </ul>
 </li>
 </ul>

@@ -26,11 +26,25 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from PIL import Image, ImageDraw
+<pre><code class="python">import importlib.util
+
+package_name = &#34;pillow&#34;
+spec = importlib.util.find_spec(package_name)
+
+if spec is None:
+    Warning(&#34;Pillow is not installed. You cannot render to the bitmap context!&#34;)
+    PYFLOWSHEET_PILLOW_MISSING = True
+else:
+    from PIL import Image, ImageDraw
+
+    PYFLOWSHEET_PILLOW_MISSING = False
 
 
 class BitmapContext(object):
     def __init__(self, size):
+
+        if PYFLOWSHEET_PILLOW_MISSING:
+            Warning(&#34;Pillow is not installed. You cannot render to the bitmap context!&#34;)
         self.img = Image.new(&#34;RGBA&#34;, size, (255, 255, 255, 255))
         self.draw = ImageDraw.Draw(self.img)
 
@@ -73,6 +87,9 @@ class BitmapContext(object):
 </summary>
 <pre><code class="python">class BitmapContext(object):
     def __init__(self, size):
+
+        if PYFLOWSHEET_PILLOW_MISSING:
+            Warning(&#34;Pillow is not installed. You cannot render to the bitmap context!&#34;)
         self.img = Image.new(&#34;RGBA&#34;, size, (255, 255, 255, 255))
         self.draw = ImageDraw.Draw(self.img)
 

@@ -27,14 +27,34 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">import svgwrite
+from .foreignObject import ForeignObject
 
 
 class SvgContext(object):
-    def __init__(self, filename, backgroundColor=None):
+    def __init__(self, filename, backgroundColor=(255, 255, 255)):
         self.dwg = svgwrite.Drawing(filename, profile=&#34;full&#34;)
         self.g = None
         self.gstack = []
         self.bounds = [1e6, 1e6, 200, 200]
+
+        self.marker = self.dwg.marker(
+            insert=(2, 2),
+            orient=&#34;auto&#34;,
+            size=(4, 4),
+        )
+        # red point as marker
+        path = svgwrite.path.Path(
+            stroke_width=1,
+        )
+        path.push(&#34;M0,0&#34;)
+        path.push(&#34;V4&#34;)
+        path.push(&#34;L2,2&#34;)
+        path.push(&#34;Z&#34;)
+
+        self.marker.add(path)
+
+        # add marker to defs section of the drawing
+        self.dwg.defs.add(self.marker)
 
         if backgroundColor != None:
             self.dwg.attribs[&#34;style&#34;] = f&#34;background-color:rgb{backgroundColor[0:3]}&#34;
@@ -107,6 +127,7 @@ class SvgContext(object):
     def text(
         self, insert, text, fontFamily, textColor, fontSize=12, textAnchor=&#34;middle&#34;
     ):
+        self._updateBounds([insert, (insert[0] + 40, insert[1] + 20)])
         self.g.add(
             self.dwg.text(
                 text,
@@ -132,7 +153,16 @@ class SvgContext(object):
         )
         return
 
-    def path(self, points, fillColor, lineColor, lineSize, close=False, dashArray=None):
+    def path(
+        self,
+        points,
+        fillColor,
+        lineColor,
+        lineSize,
+        close=False,
+        dashArray=None,
+        endMarker=False,
+    ):
 
         minx = min([(p[0]) for p in points])
         maxx = max([(p[0]) for p in points])
@@ -145,6 +175,10 @@ class SvgContext(object):
             stroke=f&#34;rgb{lineColor[0:3]}&#34;,
             stroke_width=lineSize,
         )
+
+        # if self.g != None:
+        #    self.g.attribs[&#34;stroke&#34;] = f&#34;rgb{lineColor[0:3]}&#34;
+
         if fillColor != None:
             path.attribs[&#34;fill&#34;] = f&#34;rgb{fillColor[0:3]}&#34;
         else:
@@ -161,6 +195,8 @@ class SvgContext(object):
         if close:
             path.push(f&#34;Z&#34;)
 
+        if endMarker:
+            path.set_markers((None, False, self.marker))
         self.g.add(path)
         return
 
@@ -208,23 +244,50 @@ class SvgContext(object):
         if self.g != None:
             self.gstack.append(self.g)
 
-        self.g = self.dwg.g(id=element.id + &#34;T&#34;)
+        safeId = element.id.replace(&#34; &#34;, &#34;-&#34;)
+        self.g = self.dwg.g(id=safeId + &#34;T&#34;)
 
         if element.flipHorizontal:
             self.g.attribs[
                 &#34;transform&#34;
             ] = f&#34;translate({element.position[0]+element.size[0]/2},0) scale(-1,1) translate({-(element.position[0]+element.size[0]/2)},0)&#34;
+        if element.flipVertical:
+            self.g.attribs[
+                &#34;transform&#34;
+            ] = f&#34;translate(0,{element.position[1]+element.size[1]/2}) scale(1,-1) translate(0,{-(element.position[1]+element.size[1]/2)})&#34;
 
         if element.rotation != 0:
             self.g.attribs[
                 &#34;transform&#34;
             ] = f&#34;rotate({element.rotation},{element.position[0]+element.size[0]/2},{element.position[1]+element.size[1]/2} ) &#34;
+        return
 
     def endGroup(self):
         self.dwg.add(self.g)
         self.g = None
         if len(self.gstack) &gt; 0:
             self.g = self.gstack.pop()
+        return
+
+    def html(self, html, position, size):
+        html = &#34;&lt;body width=&#39;100%&#39;&gt;&#34; + html + &#34;&lt;/body&gt;&#34;
+        e = ForeignObject(
+            html,
+            x=f&#34;{position[0]}&#34;,
+            y=f&#34;{position[1]}&#34;,
+            width=f&#34;{size[0]}&#34;,
+            height=f&#34;{size[1]}&#34;,
+        )
+        e.translate(0.2 * position[0], 0.2 * position[1])
+        e.scale(0.8)
+
+        self.g.add(e)
+        return
+
+    def image(self, image, position, size):
+
+        self.g.add(self.dwg.image(href=image, insert=position, size=size))
+        return
 
     def render(self, width=None, height=None, scale=1, saveFile=True):
 
@@ -263,7 +326,7 @@ class SvgContext(object):
 <dl>
 <dt id="pyflowsheet.svgcontext.SvgContext"><code class="flex name class">
 <span>class <span class="ident">SvgContext</span></span>
-<span>(</span><span>filename, backgroundColor=None)</span>
+<span>(</span><span>filename, backgroundColor=(255, 255, 255))</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -272,11 +335,30 @@ class SvgContext(object):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class SvgContext(object):
-    def __init__(self, filename, backgroundColor=None):
+    def __init__(self, filename, backgroundColor=(255, 255, 255)):
         self.dwg = svgwrite.Drawing(filename, profile=&#34;full&#34;)
         self.g = None
         self.gstack = []
         self.bounds = [1e6, 1e6, 200, 200]
+
+        self.marker = self.dwg.marker(
+            insert=(2, 2),
+            orient=&#34;auto&#34;,
+            size=(4, 4),
+        )
+        # red point as marker
+        path = svgwrite.path.Path(
+            stroke_width=1,
+        )
+        path.push(&#34;M0,0&#34;)
+        path.push(&#34;V4&#34;)
+        path.push(&#34;L2,2&#34;)
+        path.push(&#34;Z&#34;)
+
+        self.marker.add(path)
+
+        # add marker to defs section of the drawing
+        self.dwg.defs.add(self.marker)
 
         if backgroundColor != None:
             self.dwg.attribs[&#34;style&#34;] = f&#34;background-color:rgb{backgroundColor[0:3]}&#34;
@@ -349,6 +431,7 @@ class SvgContext(object):
     def text(
         self, insert, text, fontFamily, textColor, fontSize=12, textAnchor=&#34;middle&#34;
     ):
+        self._updateBounds([insert, (insert[0] + 40, insert[1] + 20)])
         self.g.add(
             self.dwg.text(
                 text,
@@ -374,7 +457,16 @@ class SvgContext(object):
         )
         return
 
-    def path(self, points, fillColor, lineColor, lineSize, close=False, dashArray=None):
+    def path(
+        self,
+        points,
+        fillColor,
+        lineColor,
+        lineSize,
+        close=False,
+        dashArray=None,
+        endMarker=False,
+    ):
 
         minx = min([(p[0]) for p in points])
         maxx = max([(p[0]) for p in points])
@@ -387,6 +479,10 @@ class SvgContext(object):
             stroke=f&#34;rgb{lineColor[0:3]}&#34;,
             stroke_width=lineSize,
         )
+
+        # if self.g != None:
+        #    self.g.attribs[&#34;stroke&#34;] = f&#34;rgb{lineColor[0:3]}&#34;
+
         if fillColor != None:
             path.attribs[&#34;fill&#34;] = f&#34;rgb{fillColor[0:3]}&#34;
         else:
@@ -403,6 +499,8 @@ class SvgContext(object):
         if close:
             path.push(f&#34;Z&#34;)
 
+        if endMarker:
+            path.set_markers((None, False, self.marker))
         self.g.add(path)
         return
 
@@ -450,23 +548,50 @@ class SvgContext(object):
         if self.g != None:
             self.gstack.append(self.g)
 
-        self.g = self.dwg.g(id=element.id + &#34;T&#34;)
+        safeId = element.id.replace(&#34; &#34;, &#34;-&#34;)
+        self.g = self.dwg.g(id=safeId + &#34;T&#34;)
 
         if element.flipHorizontal:
             self.g.attribs[
                 &#34;transform&#34;
             ] = f&#34;translate({element.position[0]+element.size[0]/2},0) scale(-1,1) translate({-(element.position[0]+element.size[0]/2)},0)&#34;
+        if element.flipVertical:
+            self.g.attribs[
+                &#34;transform&#34;
+            ] = f&#34;translate(0,{element.position[1]+element.size[1]/2}) scale(1,-1) translate(0,{-(element.position[1]+element.size[1]/2)})&#34;
 
         if element.rotation != 0:
             self.g.attribs[
                 &#34;transform&#34;
             ] = f&#34;rotate({element.rotation},{element.position[0]+element.size[0]/2},{element.position[1]+element.size[1]/2} ) &#34;
+        return
 
     def endGroup(self):
         self.dwg.add(self.g)
         self.g = None
         if len(self.gstack) &gt; 0:
             self.g = self.gstack.pop()
+        return
+
+    def html(self, html, position, size):
+        html = &#34;&lt;body width=&#39;100%&#39;&gt;&#34; + html + &#34;&lt;/body&gt;&#34;
+        e = ForeignObject(
+            html,
+            x=f&#34;{position[0]}&#34;,
+            y=f&#34;{position[1]}&#34;,
+            width=f&#34;{size[0]}&#34;,
+            height=f&#34;{size[1]}&#34;,
+        )
+        e.translate(0.2 * position[0], 0.2 * position[1])
+        e.scale(0.8)
+
+        self.g.add(e)
+        return
+
+    def image(self, image, position, size):
+
+        self.g.add(self.dwg.image(href=image, insert=position, size=size))
+        return
 
     def render(self, width=None, height=None, scale=1, saveFile=True):
 
@@ -588,7 +713,48 @@ class SvgContext(object):
     self.dwg.add(self.g)
     self.g = None
     if len(self.gstack) &gt; 0:
-        self.g = self.gstack.pop()</code></pre>
+        self.g = self.gstack.pop()
+    return</code></pre>
+</details>
+</dd>
+<dt id="pyflowsheet.svgcontext.SvgContext.html"><code class="name flex">
+<span>def <span class="ident">html</span></span>(<span>self, html, position, size)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def html(self, html, position, size):
+    html = &#34;&lt;body width=&#39;100%&#39;&gt;&#34; + html + &#34;&lt;/body&gt;&#34;
+    e = ForeignObject(
+        html,
+        x=f&#34;{position[0]}&#34;,
+        y=f&#34;{position[1]}&#34;,
+        width=f&#34;{size[0]}&#34;,
+        height=f&#34;{size[1]}&#34;,
+    )
+    e.translate(0.2 * position[0], 0.2 * position[1])
+    e.scale(0.8)
+
+    self.g.add(e)
+    return</code></pre>
+</details>
+</dd>
+<dt id="pyflowsheet.svgcontext.SvgContext.image"><code class="name flex">
+<span>def <span class="ident">image</span></span>(<span>self, image, position, size)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def image(self, image, position, size):
+
+    self.g.add(self.dwg.image(href=image, insert=position, size=size))
+    return</code></pre>
 </details>
 </dd>
 <dt id="pyflowsheet.svgcontext.SvgContext.line"><code class="name flex">
@@ -615,7 +781,7 @@ class SvgContext(object):
 </details>
 </dd>
 <dt id="pyflowsheet.svgcontext.SvgContext.path"><code class="name flex">
-<span>def <span class="ident">path</span></span>(<span>self, points, fillColor, lineColor, lineSize, close=False, dashArray=None)</span>
+<span>def <span class="ident">path</span></span>(<span>self, points, fillColor, lineColor, lineSize, close=False, dashArray=None, endMarker=False)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -623,7 +789,16 @@ class SvgContext(object):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def path(self, points, fillColor, lineColor, lineSize, close=False, dashArray=None):
+<pre><code class="python">def path(
+    self,
+    points,
+    fillColor,
+    lineColor,
+    lineSize,
+    close=False,
+    dashArray=None,
+    endMarker=False,
+):
 
     minx = min([(p[0]) for p in points])
     maxx = max([(p[0]) for p in points])
@@ -636,6 +811,10 @@ class SvgContext(object):
         stroke=f&#34;rgb{lineColor[0:3]}&#34;,
         stroke_width=lineSize,
     )
+
+    # if self.g != None:
+    #    self.g.attribs[&#34;stroke&#34;] = f&#34;rgb{lineColor[0:3]}&#34;
+
     if fillColor != None:
         path.attribs[&#34;fill&#34;] = f&#34;rgb{fillColor[0:3]}&#34;
     else:
@@ -652,6 +831,8 @@ class SvgContext(object):
     if close:
         path.push(f&#34;Z&#34;)
 
+    if endMarker:
+        path.set_markers((None, False, self.marker))
     self.g.add(path)
     return</code></pre>
 </details>
@@ -754,17 +935,23 @@ class SvgContext(object):
     if self.g != None:
         self.gstack.append(self.g)
 
-    self.g = self.dwg.g(id=element.id + &#34;T&#34;)
+    safeId = element.id.replace(&#34; &#34;, &#34;-&#34;)
+    self.g = self.dwg.g(id=safeId + &#34;T&#34;)
 
     if element.flipHorizontal:
         self.g.attribs[
             &#34;transform&#34;
         ] = f&#34;translate({element.position[0]+element.size[0]/2},0) scale(-1,1) translate({-(element.position[0]+element.size[0]/2)},0)&#34;
+    if element.flipVertical:
+        self.g.attribs[
+            &#34;transform&#34;
+        ] = f&#34;translate(0,{element.position[1]+element.size[1]/2}) scale(1,-1) translate(0,{-(element.position[1]+element.size[1]/2)})&#34;
 
     if element.rotation != 0:
         self.g.attribs[
             &#34;transform&#34;
-        ] = f&#34;rotate({element.rotation},{element.position[0]+element.size[0]/2},{element.position[1]+element.size[1]/2} ) &#34;</code></pre>
+        ] = f&#34;rotate({element.rotation},{element.position[0]+element.size[0]/2},{element.position[1]+element.size[1]/2} ) &#34;
+    return</code></pre>
 </details>
 </dd>
 <dt id="pyflowsheet.svgcontext.SvgContext.text"><code class="name flex">
@@ -779,6 +966,7 @@ class SvgContext(object):
 <pre><code class="python">def text(
     self, insert, text, fontFamily, textColor, fontSize=12, textAnchor=&#34;middle&#34;
 ):
+    self._updateBounds([insert, (insert[0] + 40, insert[1] + 20)])
     self.g.add(
         self.dwg.text(
             text,
@@ -816,6 +1004,8 @@ class SvgContext(object):
 <li><code><a title="pyflowsheet.svgcontext.SvgContext.chord" href="#pyflowsheet.svgcontext.SvgContext.chord">chord</a></code></li>
 <li><code><a title="pyflowsheet.svgcontext.SvgContext.circle" href="#pyflowsheet.svgcontext.SvgContext.circle">circle</a></code></li>
 <li><code><a title="pyflowsheet.svgcontext.SvgContext.endGroup" href="#pyflowsheet.svgcontext.SvgContext.endGroup">endGroup</a></code></li>
+<li><code><a title="pyflowsheet.svgcontext.SvgContext.html" href="#pyflowsheet.svgcontext.SvgContext.html">html</a></code></li>
+<li><code><a title="pyflowsheet.svgcontext.SvgContext.image" href="#pyflowsheet.svgcontext.SvgContext.image">image</a></code></li>
 <li><code><a title="pyflowsheet.svgcontext.SvgContext.line" href="#pyflowsheet.svgcontext.SvgContext.line">line</a></code></li>
 <li><code><a title="pyflowsheet.svgcontext.SvgContext.path" href="#pyflowsheet.svgcontext.SvgContext.path">path</a></code></li>
 <li><code><a title="pyflowsheet.svgcontext.SvgContext.rectangle" href="#pyflowsheet.svgcontext.SvgContext.rectangle">rectangle</a></code></li>

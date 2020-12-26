@@ -35,16 +35,17 @@ class Splitter(UnitOperation):
         self, id: str, name: str, position=(0, 0), size=(20, 20), description: str = &#34;&#34;
     ):
         super().__init__(id, name, position=position, size=size)
-        self.fillColor = (64, 64, 64, 255)
+        self.fillColor = (0, 0, 0, 255)
+        self.lineColor = (0, 0, 0, 255)
         self.textOffset = (0, 10)
         self.updatePorts()
 
     def updatePorts(self):
         self.ports = {}
-        self.ports[&#34;In&#34;] = Port(&#34;In&#34;, self, (0.25, 0.5), (-1, 0))
-        self.ports[&#34;Out2&#34;] = Port(&#34;Out2&#34;, self, (0.5, 0.25), (0, -1), intent=&#34;out&#34;)
-        self.ports[&#34;Out3&#34;] = Port(&#34;Out3&#34;, self, (0.5, 0.75), (0, 1), intent=&#34;out&#34;)
-        self.ports[&#34;Out1&#34;] = Port(&#34;Out1&#34;, self, (0.75, 0.5), (1, 0), intent=&#34;out&#34;)
+        self.ports[&#34;In&#34;] = Port(&#34;In&#34;, self, (0.2, 0.5), (-2, 0))
+        self.ports[&#34;Out2&#34;] = Port(&#34;Out2&#34;, self, (0.5, 0.2), (0, -2), intent=&#34;out&#34;)
+        self.ports[&#34;Out3&#34;] = Port(&#34;Out3&#34;, self, (0.5, 0.8), (0, 2), intent=&#34;out&#34;)
+        self.ports[&#34;Out1&#34;] = Port(&#34;Out1&#34;, self, (0.8, 0.5), (2, 0), intent=&#34;out&#34;)
         return
 
     def draw(self, ctx):
@@ -61,6 +62,19 @@ class Splitter(UnitOperation):
             self.lineColor,
             self.lineSize,
         )
+
+        # ctx.line(
+        #     (self.position[0], self.position[1] + self.size[1] / 2),
+        #     (self.position[0] + self.size[0], self.position[1] + self.size[1] / 2),
+        #     self.lineColor,
+        #     self.lineSize,
+        # )
+        # ctx.line(
+        #     (self.position[0] + self.size[0] / 2, self.position[1]),
+        #     (self.position[0] + self.size[0] / 2, self.position[1] + self.size[1]),
+        #     self.lineColor,
+        #     self.lineSize,
+        # )
 
         super().draw(ctx)
 
@@ -91,16 +105,17 @@ class Splitter(UnitOperation):
         self, id: str, name: str, position=(0, 0), size=(20, 20), description: str = &#34;&#34;
     ):
         super().__init__(id, name, position=position, size=size)
-        self.fillColor = (64, 64, 64, 255)
+        self.fillColor = (0, 0, 0, 255)
+        self.lineColor = (0, 0, 0, 255)
         self.textOffset = (0, 10)
         self.updatePorts()
 
     def updatePorts(self):
         self.ports = {}
-        self.ports[&#34;In&#34;] = Port(&#34;In&#34;, self, (0.25, 0.5), (-1, 0))
-        self.ports[&#34;Out2&#34;] = Port(&#34;Out2&#34;, self, (0.5, 0.25), (0, -1), intent=&#34;out&#34;)
-        self.ports[&#34;Out3&#34;] = Port(&#34;Out3&#34;, self, (0.5, 0.75), (0, 1), intent=&#34;out&#34;)
-        self.ports[&#34;Out1&#34;] = Port(&#34;Out1&#34;, self, (0.75, 0.5), (1, 0), intent=&#34;out&#34;)
+        self.ports[&#34;In&#34;] = Port(&#34;In&#34;, self, (0.2, 0.5), (-2, 0))
+        self.ports[&#34;Out2&#34;] = Port(&#34;Out2&#34;, self, (0.5, 0.2), (0, -2), intent=&#34;out&#34;)
+        self.ports[&#34;Out3&#34;] = Port(&#34;Out3&#34;, self, (0.5, 0.8), (0, 2), intent=&#34;out&#34;)
+        self.ports[&#34;Out1&#34;] = Port(&#34;Out1&#34;, self, (0.8, 0.5), (2, 0), intent=&#34;out&#34;)
         return
 
     def draw(self, ctx):
@@ -117,6 +132,19 @@ class Splitter(UnitOperation):
             self.lineColor,
             self.lineSize,
         )
+
+        # ctx.line(
+        #     (self.position[0], self.position[1] + self.size[1] / 2),
+        #     (self.position[0] + self.size[0], self.position[1] + self.size[1] / 2),
+        #     self.lineColor,
+        #     self.lineSize,
+        # )
+        # ctx.line(
+        #     (self.position[0] + self.size[0] / 2, self.position[1]),
+        #     (self.position[0] + self.size[0] / 2, self.position[1] + self.size[1]),
+        #     self.lineColor,
+        #     self.lineSize,
+        # )
 
         super().draw(ctx)
 
@@ -152,6 +180,19 @@ class Splitter(UnitOperation):
         self.lineSize,
     )
 
+    # ctx.line(
+    #     (self.position[0], self.position[1] + self.size[1] / 2),
+    #     (self.position[0] + self.size[0], self.position[1] + self.size[1] / 2),
+    #     self.lineColor,
+    #     self.lineSize,
+    # )
+    # ctx.line(
+    #     (self.position[0] + self.size[0] / 2, self.position[1]),
+    #     (self.position[0] + self.size[0] / 2, self.position[1] + self.size[1]),
+    #     self.lineColor,
+    #     self.lineSize,
+    # )
+
     super().draw(ctx)
 
     return</code></pre>
@@ -168,10 +209,10 @@ class Splitter(UnitOperation):
 </summary>
 <pre><code class="python">def updatePorts(self):
     self.ports = {}
-    self.ports[&#34;In&#34;] = Port(&#34;In&#34;, self, (0.25, 0.5), (-1, 0))
-    self.ports[&#34;Out2&#34;] = Port(&#34;Out2&#34;, self, (0.5, 0.25), (0, -1), intent=&#34;out&#34;)
-    self.ports[&#34;Out3&#34;] = Port(&#34;Out3&#34;, self, (0.5, 0.75), (0, 1), intent=&#34;out&#34;)
-    self.ports[&#34;Out1&#34;] = Port(&#34;Out1&#34;, self, (0.75, 0.5), (1, 0), intent=&#34;out&#34;)
+    self.ports[&#34;In&#34;] = Port(&#34;In&#34;, self, (0.2, 0.5), (-2, 0))
+    self.ports[&#34;Out2&#34;] = Port(&#34;Out2&#34;, self, (0.5, 0.2), (0, -2), intent=&#34;out&#34;)
+    self.ports[&#34;Out3&#34;] = Port(&#34;Out3&#34;, self, (0.5, 0.8), (0, 2), intent=&#34;out&#34;)
+    self.ports[&#34;Out1&#34;] = Port(&#34;Out1&#34;, self, (0.8, 0.5), (2, 0), intent=&#34;out&#34;)
     return</code></pre>
 </details>
 </dd>

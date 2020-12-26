@@ -22,6 +22,38 @@
 <h1 class="title">Module <code>pyflowsheet.textelement</code></h1>
 </header>
 <section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from .unitoperation import UnitOperation
+from .enums import HorizontalLabelAlignment, VerticalLabelAlignment
+
+
+class TextElement(UnitOperation):
+    def __init__(self, text, position=(0, 0)):
+        super().__init__(&#34;text&#34;, &#34;text&#34;, position=position, size=(20, 20))
+        self.text = text
+        self.drawBoundingBox = False
+        self.showTitle = False
+        self.fontFamily = &#34;Consolas&#34;
+        return
+
+    def draw(self, ctx):
+        # html = self.data.to_html()
+        # ctx.html(html, self.position, self.size)
+
+        ctx.text(
+            self.position,
+            text=self.text,
+            fontFamily=self.fontFamily,
+            textColor=self.textColor,
+            textAnchor=&#34;start&#34;,
+        )
+        # super().draw(ctx)
+
+        return</code></pre>
+</details>
 </section>
 <section>
 </section>
@@ -30,6 +62,76 @@
 <section>
 </section>
 <section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="pyflowsheet.textelement.TextElement"><code class="flex name class">
+<span>class <span class="ident">TextElement</span></span>
+<span>(</span><span>text, position=(0, 0))</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TextElement(UnitOperation):
+    def __init__(self, text, position=(0, 0)):
+        super().__init__(&#34;text&#34;, &#34;text&#34;, position=position, size=(20, 20))
+        self.text = text
+        self.drawBoundingBox = False
+        self.showTitle = False
+        self.fontFamily = &#34;Consolas&#34;
+        return
+
+    def draw(self, ctx):
+        # html = self.data.to_html()
+        # ctx.html(html, self.position, self.size)
+
+        ctx.text(
+            self.position,
+            text=self.text,
+            fontFamily=self.fontFamily,
+            textColor=self.textColor,
+            textAnchor=&#34;start&#34;,
+        )
+        # super().draw(ctx)
+
+        return</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pyflowsheet.unitoperation.UnitOperation" href="unitoperation.html#pyflowsheet.unitoperation.UnitOperation">UnitOperation</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="pyflowsheet.textelement.TextElement.draw"><code class="name flex">
+<span>def <span class="ident">draw</span></span>(<span>self, ctx)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def draw(self, ctx):
+    # html = self.data.to_html()
+    # ctx.html(html, self.position, self.size)
+
+    ctx.text(
+        self.position,
+        text=self.text,
+        fontFamily=self.fontFamily,
+        textColor=self.textColor,
+        textAnchor=&#34;start&#34;,
+    )
+    # super().draw(ctx)
+
+    return</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -41,6 +143,16 @@
 <li><h3>Super-module</h3>
 <ul>
 <li><code><a title="pyflowsheet" href="index.html">pyflowsheet</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="pyflowsheet.textelement.TextElement" href="#pyflowsheet.textelement.TextElement">TextElement</a></code></h4>
+<ul class="">
+<li><code><a title="pyflowsheet.textelement.TextElement.draw" href="#pyflowsheet.textelement.TextElement.draw">draw</a></code></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
