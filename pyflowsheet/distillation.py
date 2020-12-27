@@ -12,7 +12,7 @@ class Distillation(UnitOperation):
         position=(0, 0),
         size=(40, 200),
         description: str = "",
-        internals=None,
+        internals="",
     ):
 
         super().__init__(id, name, position=position, size=size)
@@ -182,7 +182,7 @@ class Distillation(UnitOperation):
             self.lineSize,
         )
 
-        if self.internals.lower() == "dividingwall":
+        if self.internals is not None and self.internals.lower() == "dividingwall":
             ctx.line(
                 (self.position[0] + self.size[0] / 2, self.position[1] + self.size[0]),
                 (
@@ -192,7 +192,7 @@ class Distillation(UnitOperation):
                 self.lineColor,
                 self.lineSize,
             )
-        if self.internals.lower() == "packing":
+        if self.internals is not None and self.internals.lower() == "packing":
             ctx.line(
                 (self.position[0], self.position[1] + self.size[0] / 2),
                 (
@@ -257,7 +257,7 @@ class Distillation(UnitOperation):
                 self.lineColor,
                 self.lineSize,
             )
-        if self.internals.lower() == "trays":
+        if self.internals is not None and self.internals.lower() == "trays":
             numTrays = 11
             for i in range(numTrays):
                 if i % 2 == 0:
