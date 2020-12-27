@@ -20,6 +20,7 @@ class UnitOperation(object):
         self.horizontalLabelAlignment = HorizontalLabelAlignment.Center
         self.showTitle = True
         self.fontFamily = "Arial"
+        self.fontSize = 12
         self.ports = {}
         self.flipHorizontal = False
         self.flipVertical = False
@@ -153,5 +154,6 @@ class UnitOperation(object):
                 fontFamily=self.fontFamily,
                 textColor=self.textColor,
                 textAnchor=align,
+                fontSize=self.fontSize,
             )
         return
