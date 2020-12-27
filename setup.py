@@ -17,8 +17,8 @@ def read(fname):
 
 setup(
     name="pyflowsheet",
-    version="0.1.0",
-    description="A Python library to create process flow diagrams (PFD) for process engineering using SVG drawings.",
+    version="0.1.1",
+    description="A Python library for creating process flow diagrams (PFD) for process engineering using SVG drawings.",
     author=AUTHOR_NAME,
     email=AUTHOR_EMAIL,
     url="https://github.com/nukleon84/pyflowsheet",
@@ -30,7 +30,7 @@ setup(
     platforms="OS Independent",
     license="MIT License",
     install_requires=["svgwrite", "pathfinding"],
-    extra_requires={"plots": "matplotlib"},
+    extras_require={"plots": ["matplotlib"]},
     classifiers=[
         "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: MIT License",
@@ -44,8 +44,7 @@ setup(
         "Intended Audience :: Developers",
         "Topic :: Multimedia :: Graphics",
         "Topic :: Software Development :: Libraries :: Python Modules",
-        "Topic :: Scientific/Engineering :: Chemistry"
-        "Topic :: Scientific/Engineering :: Process Engineering",
+        "Topic :: Scientific/Engineering :: Chemistry",
     ],
     project_urls={
         "Bug Reports": "http://github.com/nukleon84/pyflowsheet/issues",
