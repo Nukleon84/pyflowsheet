@@ -62,6 +62,9 @@ class UnitOperation(object):
         return 20 * sin(a)
 
     def rotate(self, angle):
+
+        deltaAngle = angle - self.rotation
+
         self.rotation = angle
         for p in self.ports.values():
             x = p.relativePosition[0] * self.size[0]
@@ -71,7 +74,7 @@ class UnitOperation(object):
 
             cx = 0.5 * self.size[0]
             cy = 0.5 * self.size[1]
-            a = radians(angle)
+            a = radians(deltaAngle)
             p.relativePosition = (
                 (x * cos(a) - y * sin(a) - cx * cos(a) + cy * sin(a) + cx)
                 / self.size[0],
