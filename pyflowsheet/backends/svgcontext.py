@@ -219,11 +219,11 @@ class SvgContext(object):
         safeId = element.id.replace(" ", "-")
         self.g = self.dwg.g(id=safeId + "T")
 
-        if element.flipHorizontal:
+        if element.isFlippedHorizontal:
             self.g.attribs[
                 "transform"
             ] = f"translate({element.position[0]+element.size[0]/2},0) scale(-1,1) translate({-(element.position[0]+element.size[0]/2)},0)"
-        if element.flipVertical:
+        if element.isFlippedVertical:
             self.g.attribs[
                 "transform"
             ] = f"translate(0,{element.position[1]+element.size[1]/2}) scale(1,-1) translate(0,{-(element.position[1]+element.size[1]/2)})"

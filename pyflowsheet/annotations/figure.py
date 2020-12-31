@@ -1,5 +1,5 @@
-from .unitoperation import UnitOperation
-from .port import Port
+from ..core import UnitOperation
+from ..core import Port
 
 import importlib.util
 
@@ -20,46 +20,29 @@ else:
     PYFLOWSHEET_MATPLOTLIB_MISSING = False
 
 
-class Table(UnitOperation):
+class Figure(UnitOperation):
     def __init__(
         self,
         id: str,
         name: str,
-        data,
+        fig,
         position=(0, 0),
         size=(40, 20),
-        figsize=(5, 5),
         description: str = "",
     ):
         super().__init__(id, name, position=position, size=size)
-        self.data = data
+        self.fig = fig
         self.drawBoundingBox = False
-        self.figsize = figsize
+
         return
 
     def draw(self, ctx):
-        cell_text = []
         if not PYFLOWSHEET_MATPLOTLIB_MISSING:
-            for row in range(len(self.data)):
-                cell_text.append(self.data.iloc[row])
-            plt.figure(figsize=self.figsize)
-
-            plt.table(
-                cellText=cell_text,
-                colLabels=self.data.columns,
-                loc="center",
-                bbox=[0, 0, 1, 1],
-            )
-            plt.axis("off")
-
-            fig = plt.gcf()
-            fig.tight_layout()
             tmpfile = BytesIO()
-            fig.savefig(tmpfile, format="png")
+            self.fig.savefig(tmpfile, format="png")
             encoded = base64.b64encode(tmpfile.getvalue()).decode("utf-8")
-
-            htmlString = "data:image/png;base64,{}".format(encoded)
-            ctx.image(htmlString, self.position, self.size)
+            data = "data:image/png;base64,{}".format(encoded)
+            ctx.image(data, self.position, self.size)
         else:
             start = (self.position[0], self.position[1])
             end = (
@@ -81,6 +64,7 @@ class Table(UnitOperation):
             self.lineColor,
             self.lineSize,
         )
+
         super().draw(ctx)
 
         return

@@ -1,5 +1,5 @@
-from .unitoperation import UnitOperation
-from .port import Port
+from ..core import UnitOperation
+from ..core import Port
 
 
 class Mixer(UnitOperation):

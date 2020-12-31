@@ -1,18 +1,20 @@
-from .flowsheet import Flowsheet
-from .unitoperation import UnitOperation
-from .distillation import Distillation
-from .vessel import Vessel
-from .blackbox import BlackBox
-from .pump import Pump
-from .stream import Stream
-from .valve import Valve
-from .streamflag import StreamFlag
-from .heatexchanger import HeatExchanger
-from .mixer import Mixer
-from .splitter import Splitter
-from .enums import VerticalLabelAlignment, HorizontalLabelAlignment
-from .port import Port
+from .core import Flowsheet
+from .core import UnitOperation
+from .core import Stream
+from .core import Port
 
-from .textelement import TextElement
+from .core.enums import VerticalLabelAlignment, HorizontalLabelAlignment
 
-from .svgcontext import SvgContext
+
+from .unitoperations import Distillation
+from .unitoperations import Vessel
+from .unitoperations import BlackBox
+from .unitoperations import Pump
+from .unitoperations import Valve
+from .unitoperations import StreamFlag
+from .unitoperations import HeatExchanger
+from .unitoperations import Mixer
+from .unitoperations import Splitter
+
+from .annotations import TextElement
+from .backends import SvgContext

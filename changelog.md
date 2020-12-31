@@ -12,7 +12,17 @@ The essence of semantic versioning is a 3-part MAJOR.MINOR.MAINTENANCE numbering
 
 
 # History
-## Version 0.1.0 (23-12-2020)
+
+## Version 0.1.2
+
+**New Features**
+
+**Bugfixes**
+* Multiple calls to .rotate(angle) do not rotate the ports anymore while keeping the unit itself at the same angle.
+
+
+
+## Version 0.1.1 (27-12-2020)
 * Alpha version
 * Basic drawing functions implemented
 * [svgwrite](https://github.com/mozman/svgwrite) backend for vector output

@@ -1,6 +1,6 @@
 from .stream import Stream
+from ..annotations import TextElement
 from pathfinding.core.grid import Grid
-from .textelement import TextElement
 
 
 class Flowsheet(object):

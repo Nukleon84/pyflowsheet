@@ -22,8 +22,8 @@ class UnitOperation(object):
         self.fontFamily = "Arial"
         self.fontSize = 12
         self.ports = {}
-        self.flipHorizontal = False
-        self.flipVertical = False
+        self.isFlippedHorizontal = False
+        self.isFlippedVertical = False
         self.rotation = 0
         self.textOffset = (0, 20)
 
@@ -39,22 +39,29 @@ class UnitOperation(object):
 
     def flip(self, axis="horizontal"):
         if axis.lower() == "horizontal":
-            self.flipHorizontal = True
-            for p in self.ports.values():
-                p.relativePosition = (
-                    1 - (p.relativePosition[0]),
-                    p.relativePosition[1],
-                )
-                p.normal = (p.normal[0] * -1, p.normal[1])
+            self.flipHorizontal()
         if axis.lower() == "vertical":
-            self.flipVertical = True
-            for p in self.ports.values():
-                p.relativePosition = (
-                    (p.relativePosition[0]),
-                    1 - p.relativePosition[1],
-                )
-                p.normal = (p.normal[0], p.normal[1] * -1)
+            self.flipVertical()
+        return
 
+    def flipVertical(self):
+        self.isFlippedVertical = True
+        for p in self.ports.values():
+            p.relativePosition = (
+                (p.relativePosition[0]),
+                1 - p.relativePosition[1],
+            )
+            p.normal = (p.normal[0], p.normal[1] * -1)
+        return
+
+    def flipHorizontal(self):
+        self.isFlippedHorizontal = True
+        for p in self.ports.values():
+            p.relativePosition = (
+                1 - (p.relativePosition[0]),
+                p.relativePosition[1],
+            )
+            p.normal = (p.normal[0] * -1, p.normal[1])
         return
 
     def getNormalLength(self):
