@@ -37,7 +37,7 @@ class Compressor(UnitOperation):
         r = radians(10)
         dx = self.size[0] / 2 * cos(r)
         dy = self.size[0] / 2 * sin(r)
-        print((dx, dy))
+
         end_up = (
             self.position[0] + self.size[0] / 2 + dx,
             self.position[1] + self.size[1] / 2 - dy,
