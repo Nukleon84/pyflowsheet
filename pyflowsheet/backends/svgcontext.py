@@ -1,5 +1,6 @@
 import svgwrite
 from .foreignObject import ForeignObject
+from math import sin, cos, radians, sqrt
 
 
 class SvgContext(object):
@@ -172,10 +173,13 @@ class SvgContext(object):
         self.g.add(path)
         return
 
-    def chord(self, rect, start, end, fillColor, lineColor, lineSize):
+    def chord(
+        self, rect, startAngle, endAngle, fillColor, lineColor, lineSize, closePath=True
+    ):
         self._updateBounds(rect)
+
         p = svgwrite.path.Path(
-            fill=f"rgb{fillColor[0:3]}",
+            fill=f"rgb{fillColor[0:3]}" if fillColor else "none",
             stroke=f"rgb{lineColor[0:3]}",
             stroke_width=lineSize,
         )
@@ -183,26 +187,38 @@ class SvgContext(object):
         rh = (rect[1][0] - rect[0][0]) / 2
         rv = (rect[1][1] - rect[0][1]) / 2
 
-        if start == 180 and end == 360:
-            start = (center[0] - rh, center[1])
-            end = (center[0] + rh, center[1])
+        # if start == 180 and end == 360:
+        #     start = (center[0] - rh, center[1])
+        #     end = (center[0] + rh, center[1])
 
-        if start == 90 and end == 270:
-            start = (center[0], center[1] + rv)
-            end = (center[0], center[1] - rv)
+        # if start == 90 and end == 270:
+        #     start = (center[0], center[1] + rv)
+        #     end = (center[0], center[1] - rv)
 
-        if start == 270 and end == 90:
-            start = (center[0], center[1] - rv)
-            end = (center[0], center[1] + rv)
+        # if start == 270 and end == 90:
+        #     start = (center[0], center[1] - rv)
+        #     end = (center[0], center[1] + rv)
 
-        if start == 0 and end == 180:
-            start = (center[0] + rh, center[1])
-            end = (center[0] - rh, center[1])
+        # if start == 0 and end == 180:
+        #     start = (center[0] + rh, center[1])
+        #     end = (center[0] - rh, center[1])
 
-        p.push(f"M {center[0]} {center[1]} ")
-        p.push(f"L {start[0]} {start[1]} ")
-        p.push_arc(end, 0, (rh, rv), True, "+", True)
-        p.push(f"Z")
+        start_rad = radians(startAngle)
+        end_rad = radians(endAngle)
+
+        start = (center[0] + rh * cos(start_rad), center[1] + rv * sin(start_rad))
+        end = (center[0] + rh * cos(end_rad), center[1] + rv * sin(end_rad))
+
+        direction = "+" if endAngle > startAngle else "-"
+        largeArc = True if endAngle - startAngle >= 180 else False
+        if closePath:
+            p.push(f"M {center[0]} {center[1]} ")
+            p.push(f"L {start[0]} {start[1]} ")
+        else:
+            p.push(f"M {start[0]} {start[1]} ")
+        p.push_arc(end, 0, (rh, rv), largeArc, direction, True)
+        if closePath:
+            p.push(f"Z")
         self.g.add(p)
         return
 

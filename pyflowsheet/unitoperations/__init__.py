@@ -7,3 +7,4 @@ from .pump import Pump
 from .vessel import Vessel
 from .valve import Valve
 from .streamflag import StreamFlag
+from .compressor import Compressor

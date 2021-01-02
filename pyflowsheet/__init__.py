@@ -15,6 +15,7 @@ from .unitoperations import StreamFlag
 from .unitoperations import HeatExchanger
 from .unitoperations import Mixer
 from .unitoperations import Splitter
+from .unitoperations import Compressor
 
 from .annotations import TextElement
 from .backends import SvgContext

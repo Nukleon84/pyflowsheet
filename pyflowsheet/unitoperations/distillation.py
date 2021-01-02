@@ -12,13 +12,14 @@ class Distillation(UnitOperation):
         position=(0, 0),
         size=(40, 200),
         description: str = "",
-        internals="",
+        internals=[],
     ):
 
-        super().__init__(id, name, position=position, size=size)
+        super().__init__(id, name, position=position, size=size, internals=internals)
+
         self.hasReboiler = hasReboiler
         self.hasCondenser = hasCondenser
-        self.internals = internals  # or "Trays"
+
         if self.hasReboiler:
             self.textOffset = (0, self.size[0])
         else:
@@ -79,72 +80,18 @@ class Distillation(UnitOperation):
     def draw(self, ctx):
 
         if self.hasCondenser == True:
-            ctx.rectangle(
-                [
-                    (
-                        self.position[0] + self.size[0] / 2,
-                        self.position[1] - self.size[0] / 2,
-                    ),
-                    (
-                        self.position[0] + 3 * self.size[0] / 2,
-                        self.position[1] + self.size[0] / 2,
-                    ),
-                ],
-                None,
-                self.lineColor,
-                self.lineSize,
-            )
-            ctx.circle(
-                [
-                    (self.position[0] + self.size[0], self.position[1] - self.size[0]),
-                    (self.position[0] + 2 * self.size[0], self.position[1]),
-                ],
-                self.fillColor,
-                self.lineColor,
-                self.lineSize,
-            )
-            ctx.line(
-                (
-                    self.position[0] + 3 * self.size[0] / 2,
-                    self.position[1] + self.size[0] / 2,
-                ),
-                (
-                    self.position[0] + 2 * self.size[0],
-                    self.position[1] + self.size[0] / 2,
-                ),
-                self.lineColor,
-                self.lineSize,
-            )
+            self._drawCondenser(ctx)
 
         if self.hasReboiler == True:
-            ctx.rectangle(
-                [
-                    (
-                        self.position[0] + self.size[0] / 2,
-                        self.position[1] + self.size[1] - self.size[0] / 2,
-                    ),
-                    (
-                        self.position[0] + 3 * self.size[0] / 2,
-                        self.position[1] + self.size[1] + self.size[0] / 2,
-                    ),
-                ],
-                None,
-                self.lineColor,
-                self.lineSize,
-            )
-            ctx.circle(
-                [
-                    (self.position[0] + self.size[0], self.position[1] + self.size[1]),
-                    (
-                        self.position[0] + 2 * self.size[0],
-                        self.position[1] + self.size[1] + self.size[0],
-                    ),
-                ],
-                self.fillColor,
-                self.lineColor,
-                self.lineSize,
-            )
+            self._drawReboiler(ctx)
 
+        self._drawBasicShape(ctx)
+
+        super().draw(ctx)
+
+        return
+
+    def _drawBasicShape(self, ctx):
         ctx.chord(
             [
                 (self.position[0], self.position[1]),
@@ -182,119 +129,69 @@ class Distillation(UnitOperation):
             self.lineSize,
         )
 
-        if self.internals is not None and self.internals.lower() == "dividingwall":
-            ctx.line(
-                (self.position[0] + self.size[0] / 2, self.position[1] + self.size[0]),
+    def _drawReboiler(self, ctx):
+        ctx.rectangle(
+            [
                 (
                     self.position[0] + self.size[0] / 2,
-                    self.position[1] + self.size[1] - +self.size[0],
-                ),
-                self.lineColor,
-                self.lineSize,
-            )
-        if self.internals is not None and self.internals.lower() == "packing":
-            ctx.line(
-                (self.position[0], self.position[1] + self.size[0] / 2),
-                (
-                    self.position[0] + self.size[0],
-                    self.position[1] + self.size[1] / 2 - self.size[0] / 2,
-                ),
-                self.lineColor,
-                self.lineSize,
-            )
-            ctx.line(
-                (self.position[0] + self.size[0], self.position[1] + self.size[0] / 2),
-                (
-                    self.position[0],
-                    self.position[1] + self.size[1] / 2 - self.size[0] / 2,
-                ),
-                self.lineColor,
-                self.lineSize,
-            )
-            ctx.line(
-                (
-                    self.position[0],
-                    self.position[1] + self.size[1] / 2 - self.size[0] / 2,
-                ),
-                (
-                    self.position[0] + self.size[0],
-                    self.position[1] + self.size[1] / 2 - self.size[0] / 2,
-                ),
-                self.lineColor,
-                self.lineSize,
-            )
-
-            ctx.line(
-                (
-                    self.position[0],
-                    self.position[1] + self.size[1] / 2 + self.size[0] / 2,
-                ),
-                (
-                    self.position[0] + self.size[0],
                     self.position[1] + self.size[1] - self.size[0] / 2,
                 ),
-                self.lineColor,
-                self.lineSize,
-            )
-            ctx.line(
                 (
-                    self.position[0] + self.size[0],
-                    self.position[1] + self.size[1] / 2 + self.size[0] / 2,
+                    self.position[0] + 3 * self.size[0] / 2,
+                    self.position[1] + self.size[1] + self.size[0] / 2,
                 ),
-                (self.position[0], self.position[1] + self.size[1] - self.size[0] / 2),
-                self.lineColor,
-                self.lineSize,
-            )
-            ctx.line(
+            ],
+            None,
+            self.lineColor,
+            self.lineSize,
+        )
+        ctx.circle(
+            [
+                (self.position[0] + self.size[0], self.position[1] + self.size[1]),
                 (
-                    self.position[0],
-                    self.position[1] + self.size[1] / 2 + self.size[0] / 2,
+                    self.position[0] + 2 * self.size[0],
+                    self.position[1] + self.size[1] + self.size[0],
                 ),
-                (
-                    self.position[0] + self.size[0],
-                    self.position[1] + self.size[1] / 2 + self.size[0] / 2,
-                ),
-                self.lineColor,
-                self.lineSize,
-            )
-        if self.internals is not None and self.internals.lower() == "trays":
-            numTrays = 11
-            for i in range(numTrays):
-                if i % 2 == 0:
-                    ctx.line(
-                        (
-                            self.position[0],
-                            self.position[1]
-                            + self.size[0] / 2
-                            + (self.size[1] - self.size[0]) / numTrays * i,
-                        ),
-                        (
-                            self.position[0] + self.size[0] * 0.8,
-                            self.position[1]
-                            + self.size[0] / 2
-                            + (self.size[1] - self.size[0]) / numTrays * i,
-                        ),
-                        self.lineColor,
-                        self.lineSize,
-                    )
-                else:
-                    ctx.line(
-                        (
-                            self.position[0] + self.size[0] * 0.2,
-                            self.position[1]
-                            + self.size[0] / 2
-                            + (self.size[1] - self.size[0]) / numTrays * i,
-                        ),
-                        (
-                            self.position[0] + self.size[0],
-                            self.position[1]
-                            + self.size[0] / 2
-                            + (self.size[1] - self.size[0]) / numTrays * i,
-                        ),
-                        self.lineColor,
-                        self.lineSize,
-                    )
+            ],
+            self.fillColor,
+            self.lineColor,
+            self.lineSize,
+        )
 
-        super().draw(ctx)
-
-        return
+    def _drawCondenser(self, ctx):
+        ctx.rectangle(
+            [
+                (
+                    self.position[0] + self.size[0] / 2,
+                    self.position[1] - self.size[0] / 2,
+                ),
+                (
+                    self.position[0] + 3 * self.size[0] / 2,
+                    self.position[1] + self.size[0] / 2,
+                ),
+            ],
+            None,
+            self.lineColor,
+            self.lineSize,
+        )
+        ctx.circle(
+            [
+                (self.position[0] + self.size[0], self.position[1] - self.size[0]),
+                (self.position[0] + 2 * self.size[0], self.position[1]),
+            ],
+            self.fillColor,
+            self.lineColor,
+            self.lineSize,
+        )
+        ctx.line(
+            (
+                self.position[0] + 3 * self.size[0] / 2,
+                self.position[1] + self.size[0] / 2,
+            ),
+            (
+                self.position[0] + 2 * self.size[0],
+                self.position[1] + self.size[0] / 2,
+            ),
+            self.lineColor,
+            self.lineSize,
+        )

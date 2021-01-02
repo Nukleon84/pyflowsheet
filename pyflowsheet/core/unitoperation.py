@@ -4,7 +4,13 @@ from math import sin, cos, radians, sqrt
 
 class UnitOperation(object):
     def __init__(
-        self, id: str, name: str, position=(0, 0), size=(20, 20), description: str = ""
+        self,
+        id: str,
+        name: str,
+        position=(0, 0),
+        size=(20, 20),
+        description: str = "",
+        internals=[],
     ):
         self.id = id
         self.name = name
@@ -26,6 +32,14 @@ class UnitOperation(object):
         self.isFlippedVertical = False
         self.rotation = 0
         self.textOffset = (0, 20)
+        self.internals = []
+        if internals is not None:
+            self.addInternals(internals)
+
+    def addInternals(self, internals):
+        for internal in internals:
+            internal.parent = self
+            self.internals.append(internal)
 
     def updatePorts(self):
         self.ports = {}
@@ -91,15 +105,31 @@ class UnitOperation(object):
             p.normal = (nx * cos(a) - ny * sin(a), nx * sin(a) + ny * cos(a))
 
     def intersectsPoint(self, point):
+
+        cx = self.position[0] + 0.5 * self.size[0]
+        cy = self.position[1] + 0.5 * self.size[1]
+        a = radians(-self.rotation)
+        x, y = point
+
+        rotatedPoint = (
+            (x * cos(a) - y * sin(a) - cx * cos(a) + cy * sin(a) + cx),
+            (x * sin(a) + y * cos(a) - cx * sin(a) - cy * cos(a) + cy),
+        )
+
         test_x = (
-            point[0] >= self.position[0] and point[0] <= self.position[0] + self.size[0]
+            rotatedPoint[0] >= self.position[0]
+            and rotatedPoint[0] <= self.position[0] + self.size[0]
         )
         test_y = (
-            point[1] >= self.position[1] and point[1] <= self.position[1] + self.size[1]
+            rotatedPoint[1] >= self.position[1]
+            and rotatedPoint[1] <= self.position[1] + self.size[1]
         )
         return test_x and test_y
 
     def draw(self, ctx):
+
+        for i in self.internals:
+            i.draw(ctx)
 
         if self.drawBoundingBox:
             ctx.rectangle(
