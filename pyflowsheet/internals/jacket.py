@@ -2,8 +2,9 @@ from .baseinternal import BaseInternal
 
 
 class Jacket(BaseInternal):
-    def __init__(self, thickness=5):
+    def __init__(self, thickness=5, startYFraction=0.5):
         self.thickness = thickness
+        self.startYFraction = startYFraction
         return
 
     def draw(self, ctx):
@@ -24,11 +25,13 @@ class Jacket(BaseInternal):
             [
                 (
                     unit.position[0],
-                    unit.position[1] + unit.size[1] / 2 + bevelLength,
+                    unit.position[1] + unit.size[1] * self.startYFraction + bevelLength,
                 ),
                 (
                     unit.position[0] - self.thickness,
-                    unit.position[1] + unit.size[1] / 2 + 2 * bevelLength,
+                    unit.position[1]
+                    + unit.size[1] * self.startYFraction
+                    + 2 * bevelLength,
                 ),
                 (
                     unit.position[0] - self.thickness,
@@ -44,11 +47,13 @@ class Jacket(BaseInternal):
             [
                 (
                     unit.position[0] + unit.size[0],
-                    unit.position[1] + unit.size[1] / 2 + bevelLength,
+                    unit.position[1] + unit.size[1] * self.startYFraction + bevelLength,
                 ),
                 (
                     unit.position[0] + unit.size[0] + self.thickness,
-                    unit.position[1] + unit.size[1] / 2 + 2 * bevelLength,
+                    unit.position[1]
+                    + unit.size[1] * self.startYFraction
+                    + 2 * bevelLength,
                 ),
                 (
                     unit.position[0] + unit.size[0] + self.thickness,

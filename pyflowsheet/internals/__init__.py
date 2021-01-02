@@ -8,3 +8,6 @@ from .randomPacking import RandomPacking
 from .stirrer import Stirrer
 from .stirrer import StirrerType
 from .jacket import Jacket
+
+from .reciprocating import Reciprocating
+from .liquidRing import LiquidRing

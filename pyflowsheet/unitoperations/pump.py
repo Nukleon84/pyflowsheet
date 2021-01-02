@@ -4,9 +4,15 @@ from ..core import Port
 
 class Pump(UnitOperation):
     def __init__(
-        self, id: str, name: str, position=(0, 0), size=(40, 40), description: str = ""
+        self,
+        id: str,
+        name: str,
+        position=(0, 0),
+        size=(40, 40),
+        description: str = "",
+        internals=[],
     ):
-        super().__init__(id, name, position=position, size=size)
+        super().__init__(id, name, position=position, size=size, internals=internals)
         self.updatePorts()
 
     def updatePorts(self):

@@ -31,45 +31,39 @@ class Stirrer(BaseInternal):
         )
 
         bladeLength = unit.size[0] / 4
-        bladeHeight = unit.size[1] / 20
+        bladeHeight = unit.size[1] / 10
 
         if self.type == StirrerType.Anchor:
-            ctx.line(
-                (
-                    unit.position[0] + unit.size[0] / 2 - bladeLength,
-                    unit.position[1] + unit.size[1] - unit.size[0] / 2,
-                ),
-                (
-                    unit.position[0] + unit.size[0] / 2 + bladeLength,
-                    unit.position[1] + unit.size[1] - unit.size[0] / 2,
-                ),
+            ctx.path(
+                [
+                    (
+                        unit.position[0] + unit.size[0] / 2 - bladeLength,
+                        unit.position[1]
+                        + unit.size[1]
+                        - unit.size[0] / 2
+                        - bladeHeight,
+                    ),
+                    (
+                        unit.position[0] + unit.size[0] / 2 - bladeLength,
+                        unit.position[1] + unit.size[1] - unit.size[0] / 2,
+                    ),
+                    (
+                        unit.position[0] + unit.size[0] / 2 + bladeLength,
+                        unit.position[1] + unit.size[1] - unit.size[0] / 2,
+                    ),
+                    (
+                        unit.position[0] + unit.size[0] / 2 + bladeLength,
+                        unit.position[1]
+                        + unit.size[1]
+                        - unit.size[0] / 2
+                        - bladeHeight,
+                    ),
+                ],
+                None,
                 unit.lineColor,
                 unit.lineSize,
             )
-            ctx.line(
-                (
-                    unit.position[0] + unit.size[0] / 2 - bladeLength,
-                    unit.position[1] + unit.size[1] - unit.size[0] / 2,
-                ),
-                (
-                    unit.position[0] + unit.size[0] / 2 - bladeLength,
-                    unit.position[1] + unit.size[1] - unit.size[0] / 2 - bladeHeight,
-                ),
-                unit.lineColor,
-                unit.lineSize,
-            )
-            ctx.line(
-                (
-                    unit.position[0] + unit.size[0] / 2 + bladeLength,
-                    unit.position[1] + unit.size[1] - unit.size[0] / 2,
-                ),
-                (
-                    unit.position[0] + unit.size[0] / 2 + bladeLength,
-                    unit.position[1] + unit.size[1] - unit.size[0] / 2 - bladeHeight,
-                ),
-                unit.lineColor,
-                unit.lineSize,
-            )
+
         if self.type == StirrerType.Propeller:
             ctx.line(
                 (
