@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>pyflowsheet.core.unitoperation API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>pyflowsheet.core.unitoperation</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from .enums import HorizontalLabelAlignment, VerticalLabelAlignment
+from math import sin, cos, radians, sqrt
+
+
+class UnitOperation(object):
+    def __init__(
+        self,
+        id: str,
+        name: str,
+        position=(0, 0),
+        size=(20, 20),
+        description: str = &#34;&#34;,
+        internals=[],
+    ):
+        self.id = id
+        self.name = name
+        self.description = description
+        self.lineColor = (0, 0, 0, 255)
+        self.fillColor = (255, 255, 255, 255)
+        self.textColor = (0, 0, 0, 255)
+        self.size = size
+        self.position = position
+        self.lineSize = 2
+        self.drawBoundingBox = False
+        self.verticalLabelAlignment = VerticalLabelAlignment.Bottom
+        self.horizontalLabelAlignment = HorizontalLabelAlignment.Center
+        self.showTitle = True
+        self.fontFamily = &#34;Arial&#34;
+        self.fontSize = 12
+        self.ports = {}
+        self.isFlippedHorizontal = False
+        self.isFlippedVertical = False
+        self.rotation = 0
+        self.textOffset = (0, 20)
+        self.internals = []
+        if internals is not None:
+            self.addInternals(internals)
+
+    def addInternals(self, internals):
+        for internal in internals:
+            internal.parent = self
+            self.internals.append(internal)
+
+    def updatePorts(self):
+        self.ports = {}
+        return
+
+    def __getitem__(self, key):
+        if key in self.ports:
+            return self.ports[key]
+        else:
+            raise KeyError(f&#34;UnitOperation {self.id} does not have a port named {key}&#34;)
+
+    def flip(self, axis=&#34;horizontal&#34;):
+        if axis.lower() == &#34;horizontal&#34;:
+            self.flipHorizontal()
+        if axis.lower() == &#34;vertical&#34;:
+            self.flipVertical()
+        return
+
+    def flipVertical(self):
+        self.isFlippedVertical = True
+        for p in self.ports.values():
+            p.relativePosition = (
+                (p.relativePosition[0]),
+                1 - p.relativePosition[1],
+            )
+            p.normal = (p.normal[0], p.normal[1] * -1)
+        return
+
+    def flipHorizontal(self):
+        self.isFlippedHorizontal = True
+        for p in self.ports.values():
+            p.relativePosition = (
+                1 - (p.relativePosition[0]),
+                p.relativePosition[1],
+            )
+            p.normal = (p.normal[0] * -1, p.normal[1])
+        return
+
+    def getNormalLength(self):
+        a = radians(self.rotation)
+        return 20 * sin(a)
+
+    def rotate(self, angle):
+
+        deltaAngle = angle - self.rotation
+
+        self.rotation = angle
+        for p in self.ports.values():
+            x = p.relativePosition[0] * self.size[0]
+            y = p.relativePosition[1] * self.size[1]
+            nx = p.normal[0]
+            ny = p.normal[1]
+
+            cx = 0.5 * self.size[0]
+            cy = 0.5 * self.size[1]
+            a = radians(deltaAngle)
+            p.relativePosition = (
+                (x * cos(a) - y * sin(a) - cx * cos(a) + cy * sin(a) + cx)
+                / self.size[0],
+                (x * sin(a) + y * cos(a) - cx * sin(a) - cy * cos(a) + cy)
+                / self.size[1],
+            )
+            p.normal = (nx * cos(a) - ny * sin(a), nx * sin(a) + ny * cos(a))
+
+    def intersectsPoint(self, point):
+
+        cx = self.position[0] + 0.5 * self.size[0]
+        cy = self.position[1] + 0.5 * self.size[1]
+        a = radians(-self.rotation)
+        x, y = point
+
+        rotatedPoint = (
+            (x * cos(a) - y * sin(a) - cx * cos(a) + cy * sin(a) + cx),
+            (x * sin(a) + y * cos(a) - cx * sin(a) - cy * cos(a) + cy),
+        )
+
+        test_x = (
+            rotatedPoint[0] &gt;= self.position[0]
+            and rotatedPoint[0] &lt;= self.position[0] + self.size[0]
+        )
+        test_y = (
+            rotatedPoint[1] &gt;= self.position[1]
+            and rotatedPoint[1] &lt;= self.position[1] + self.size[1]
+        )
+        return test_x and test_y
+
+    def draw(self, ctx):
+
+        for i in self.internals:
+            i.draw(ctx)
+
+        if self.drawBoundingBox:
+            ctx.rectangle(
+                [
+                    (self.position[0], self.position[1]),
+                    (self.position[0] + self.size[0], self.position[1] + self.size[1]),
+                ],
+                fillColor=None,
+                lineColor=(255, 0, 0, 255),
+                lineSize=1,
+            )
+
+        return
+
+    def setTextAnchor(self, horizontal, vertical, offset=None):
+
+        if offset != None:
+            self.textOffset = offset
+        self.horizontalLabelAlignment = horizontal
+        self.verticalLabelAlignment = vertical
+        return
+
+    def getTextAnchor(self):
+
+        x = 0
+        y = 0
+        align = &#34;middle&#34;
+        if self.horizontalLabelAlignment == HorizontalLabelAlignment.Center:
+            x = self.position[0] + self.size[0] / 2
+        if self.horizontalLabelAlignment == HorizontalLabelAlignment.LeftOuter:
+            x = self.position[0]
+            align = &#34;end&#34;
+        if self.horizontalLabelAlignment == HorizontalLabelAlignment.Left:
+            x = self.position[0]
+            align = &#34;start&#34;
+        if self.horizontalLabelAlignment == HorizontalLabelAlignment.RightOuter:
+            x = self.position[0] + self.size[0]
+            align = &#34;start&#34;
+        if self.horizontalLabelAlignment == HorizontalLabelAlignment.Right:
+            x = self.position[0] + self.size[0]
+            align = &#34;end&#34;
+
+        if self.verticalLabelAlignment == VerticalLabelAlignment.Center:
+            y = self.position[1] + self.size[1] / 2
+        elif self.verticalLabelAlignment == VerticalLabelAlignment.Bottom:
+            y = self.position[1] + self.size[1]
+        elif self.verticalLabelAlignment == VerticalLabelAlignment.Top:
+            y = self.position[1]
+
+        anchor = (x + self.textOffset[0], y + self.textOffset[1])
+
+        return anchor, align
+
+    def drawTextLayer(self, ctx):
+        # for p in self.ports.values():
+        #    p.draw(ctx)
+        if self.showTitle:
+            insert, align = self.getTextAnchor()
+            ctx.text(
+                insert,
+                text=self.id,
+                fontFamily=self.fontFamily,
+                textColor=self.textColor,
+                textAnchor=align,
+                fontSize=self.fontSize,
+            )
+        return</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="pyflowsheet.core.unitoperation.UnitOperation"><code class="flex name class">
+<span>class <span class="ident">UnitOperation</span></span>
+<span>(</span><span>id: str, name: str, position=(0, 0), size=(20, 20), description: str = '', internals=[])</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class UnitOperation(object):
+    def __init__(
+        self,
+        id: str,
+        name: str,
+        position=(0, 0),
+        size=(20, 20),
+        description: str = &#34;&#34;,
+        internals=[],
+    ):
+        self.id = id
+        self.name = name
+        self.description = description
+        self.lineColor = (0, 0, 0, 255)
+        self.fillColor = (255, 255, 255, 255)
+        self.textColor = (0, 0, 0, 255)
+        self.size = size
+        self.position = position
+        self.lineSize = 2
+        self.drawBoundingBox = False
+        self.verticalLabelAlignment = VerticalLabelAlignment.Bottom
+        self.horizontalLabelAlignment = HorizontalLabelAlignment.Center
+        self.showTitle = True
+        self.fontFamily = &#34;Arial&#34;
+        self.fontSize = 12
+        self.ports = {}
+        self.isFlippedHorizontal = False
+        self.isFlippedVertical = False
+        self.rotation = 0
+        self.textOffset = (0, 20)
+        self.internals = []
+        if internals is not None:
+            self.addInternals(internals)
+
+    def addInternals(self, internals):
+        for internal in internals:
+            internal.parent = self
+            self.internals.append(internal)
+
+    def updatePorts(self):
+        self.ports = {}
+        return
+
+    def __getitem__(self, key):
+        if key in self.ports:
+            return self.ports[key]
+        else:
+            raise KeyError(f&#34;UnitOperation {self.id} does not have a port named {key}&#34;)
+
+    def flip(self, axis=&#34;horizontal&#34;):
+        if axis.lower() == &#34;horizontal&#34;:
+            self.flipHorizontal()
+        if axis.lower() == &#34;vertical&#34;:
+            self.flipVertical()
+        return
+
+    def flipVertical(self):
+        self.isFlippedVertical = True
+        for p in self.ports.values():
+            p.relativePosition = (
+                (p.relativePosition[0]),
+                1 - p.relativePosition[1],
+            )
+            p.normal = (p.normal[0], p.normal[1] * -1)
+        return
+
+    def flipHorizontal(self):
+        self.isFlippedHorizontal = True
+        for p in self.ports.values():
+            p.relativePosition = (
+                1 - (p.relativePosition[0]),
+                p.relativePosition[1],
+            )
+            p.normal = (p.normal[0] * -1, p.normal[1])
+        return
+
+    def getNormalLength(self):
+        a = radians(self.rotation)
+        return 20 * sin(a)
+
+    def rotate(self, angle):
+
+        deltaAngle = angle - self.rotation
+
+        self.rotation = angle
+        for p in self.ports.values():
+            x = p.relativePosition[0] * self.size[0]
+            y = p.relativePosition[1] * self.size[1]
+            nx = p.normal[0]
+            ny = p.normal[1]
+
+            cx = 0.5 * self.size[0]
+            cy = 0.5 * self.size[1]
+            a = radians(deltaAngle)
+            p.relativePosition = (
+                (x * cos(a) - y * sin(a) - cx * cos(a) + cy * sin(a) + cx)
+                / self.size[0],
+                (x * sin(a) + y * cos(a) - cx * sin(a) - cy * cos(a) + cy)
+                / self.size[1],
+            )
+            p.normal = (nx * cos(a) - ny * sin(a), nx * sin(a) + ny * cos(a))
+
+    def intersectsPoint(self, point):
+
+        cx = self.position[0] + 0.5 * self.size[0]
+        cy = self.position[1] + 0.5 * self.size[1]
+        a = radians(-self.rotation)
+        x, y = point
+
+        rotatedPoint = (
+            (x * cos(a) - y * sin(a) - cx * cos(a) + cy * sin(a) + cx),
+            (x * sin(a) + y * cos(a) - cx * sin(a) - cy * cos(a) + cy),
+        )
+
+        test_x = (
+            rotatedPoint[0] &gt;= self.position[0]
+            and rotatedPoint[0] &lt;= self.position[0] + self.size[0]
+        )
+        test_y = (
+            rotatedPoint[1] &gt;= self.position[1]
+            and rotatedPoint[1] &lt;= self.position[1] + self.size[1]
+        )
+        return test_x and test_y
+
+    def draw(self, ctx):
+
+        for i in self.internals:
+            i.draw(ctx)
+
+        if self.drawBoundingBox:
+            ctx.rectangle(
+                [
+                    (self.position[0], self.position[1]),
+                    (self.position[0] + self.size[0], self.position[1] + self.size[1]),
+                ],
+                fillColor=None,
+                lineColor=(255, 0, 0, 255),
+                lineSize=1,
+            )
+
+        return
+
+    def setTextAnchor(self, horizontal, vertical, offset=None):
+
+        if offset != None:
+            self.textOffset = offset
+        self.horizontalLabelAlignment = horizontal
+        self.verticalLabelAlignment = vertical
+        return
+
+    def getTextAnchor(self):
+
+        x = 0
+        y = 0
+        align = &#34;middle&#34;
+        if self.horizontalLabelAlignment == HorizontalLabelAlignment.Center:
+            x = self.position[0] + self.size[0] / 2
+        if self.horizontalLabelAlignment == HorizontalLabelAlignment.LeftOuter:
+            x = self.position[0]
+            align = &#34;end&#34;
+        if self.horizontalLabelAlignment == HorizontalLabelAlignment.Left:
+            x = self.position[0]
+            align = &#34;start&#34;
+        if self.horizontalLabelAlignment == HorizontalLabelAlignment.RightOuter:
+            x = self.position[0] + self.size[0]
+            align = &#34;start&#34;
+        if self.horizontalLabelAlignment == HorizontalLabelAlignment.Right:
+            x = self.position[0] + self.size[0]
+            align = &#34;end&#34;
+
+        if self.verticalLabelAlignment == VerticalLabelAlignment.Center:
+            y = self.position[1] + self.size[1] / 2
+        elif self.verticalLabelAlignment == VerticalLabelAlignment.Bottom:
+            y = self.position[1] + self.size[1]
+        elif self.verticalLabelAlignment == VerticalLabelAlignment.Top:
+            y = self.position[1]
+
+        anchor = (x + self.textOffset[0], y + self.textOffset[1])
+
+        return anchor, align
+
+    def drawTextLayer(self, ctx):
+        # for p in self.ports.values():
+        #    p.draw(ctx)
+        if self.showTitle:
+            insert, align = self.getTextAnchor()
+            ctx.text(
+                insert,
+                text=self.id,
+                fontFamily=self.fontFamily,
+                textColor=self.textColor,
+                textAnchor=align,
+                fontSize=self.fontSize,
+            )
+        return</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="pyflowsheet.annotations.figure.Figure" href="../annotations/figure.html#pyflowsheet.annotations.figure.Figure">Figure</a></li>
+<li><a title="pyflowsheet.annotations.table.Table" href="../annotations/table.html#pyflowsheet.annotations.table.Table">Table</a></li>
+<li><a title="pyflowsheet.annotations.textelement.TextElement" href="../annotations/textelement.html#pyflowsheet.annotations.textelement.TextElement">TextElement</a></li>
+<li><a title="pyflowsheet.unitoperations.blackbox.BlackBox" href="../unitoperations/blackbox.html#pyflowsheet.unitoperations.blackbox.BlackBox">BlackBox</a></li>
+<li><a title="pyflowsheet.unitoperations.compressor.Compressor" href="../unitoperations/compressor.html#pyflowsheet.unitoperations.compressor.Compressor">Compressor</a></li>
+<li><a title="pyflowsheet.unitoperations.distillation.Distillation" href="../unitoperations/distillation.html#pyflowsheet.unitoperations.distillation.Distillation">Distillation</a></li>
+<li><a title="pyflowsheet.unitoperations.heatexchanger.HeatExchanger" href="../unitoperations/heatexchanger.html#pyflowsheet.unitoperations.heatexchanger.HeatExchanger">HeatExchanger</a></li>
+<li><a title="pyflowsheet.unitoperations.mixer.Mixer" href="../unitoperations/mixer.html#pyflowsheet.unitoperations.mixer.Mixer">Mixer</a></li>
+<li><a title="pyflowsheet.unitoperations.pump.Pump" href="../unitoperations/pump.html#pyflowsheet.unitoperations.pump.Pump">Pump</a></li>
+<li><a title="pyflowsheet.unitoperations.splitter.Splitter" href="../unitoperations/splitter.html#pyflowsheet.unitoperations.splitter.Splitter">Splitter</a></li>
+<li><a title="pyflowsheet.unitoperations.streamflag.StreamFlag" href="../unitoperations/streamflag.html#pyflowsheet.unitoperations.streamflag.StreamFlag">StreamFlag</a></li>
+<li><a title="pyflowsheet.unitoperations.valve.Valve" href="../unitoperations/valve.html#pyflowsheet.unitoperations.valve.Valve">Valve</a></li>
+<li><a title="pyflowsheet.unitoperations.vessel.Vessel" href="../unitoperations/vessel.html#pyflowsheet.unitoperations.vessel.Vessel">Vessel</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="pyflowsheet.core.unitoperation.UnitOperation.addInternals"><code class="name flex">
+<span>def <span class="ident">addInternals</span></span>(<span>self, internals)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def addInternals(self, internals):
+    for internal in internals:
+        internal.parent = self
+        self.internals.append(internal)</code></pre>
+</details>
+</dd>
+<dt id="pyflowsheet.core.unitoperation.UnitOperation.draw"><code class="name flex">
+<span>def <span class="ident">draw</span></span>(<span>self, ctx)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def draw(self, ctx):
+
+    for i in self.internals:
+        i.draw(ctx)
+
+    if self.drawBoundingBox:
+        ctx.rectangle(
+            [
+                (self.position[0], self.position[1]),
+                (self.position[0] + self.size[0], self.position[1] + self.size[1]),
+            ],
+            fillColor=None,
+            lineColor=(255, 0, 0, 255),
+            lineSize=1,
+        )
+
+    return</code></pre>
+</details>
+</dd>
+<dt id="pyflowsheet.core.unitoperation.UnitOperation.drawTextLayer"><code class="name flex">
+<span>def <span class="ident">drawTextLayer</span></span>(<span>self, ctx)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def drawTextLayer(self, ctx):
+    # for p in self.ports.values():
+    #    p.draw(ctx)
+    if self.showTitle:
+        insert, align = self.getTextAnchor()
+        ctx.text(
+            insert,
+            text=self.id,
+            fontFamily=self.fontFamily,
+            textColor=self.textColor,
+            textAnchor=align,
+            fontSize=self.fontSize,
+        )
+    return</code></pre>
+</details>
+</dd>
+<dt id="pyflowsheet.core.unitoperation.UnitOperation.flip"><code class="name flex">
+<span>def <span class="ident">flip</span></span>(<span>self, axis='horizontal')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def flip(self, axis=&#34;horizontal&#34;):
+    if axis.lower() == &#34;horizontal&#34;:
+        self.flipHorizontal()
+    if axis.lower() == &#34;vertical&#34;:
+        self.flipVertical()
+    return</code></pre>
+</details>
+</dd>
+<dt id="pyflowsheet.core.unitoperation.UnitOperation.flipHorizontal"><code class="name flex">
+<span>def <span class="ident">flipHorizontal</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def flipHorizontal(self):
+    self.isFlippedHorizontal = True
+    for p in self.ports.values():
+        p.relativePosition = (
+            1 - (p.relativePosition[0]),
+            p.relativePosition[1],
+        )
+        p.normal = (p.normal[0] * -1, p.normal[1])
+    return</code></pre>
+</details>
+</dd>
+<dt id="pyflowsheet.core.unitoperation.UnitOperation.flipVertical"><code class="name flex">
+<span>def <span class="ident">flipVertical</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def flipVertical(self):
+    self.isFlippedVertical = True
+    for p in self.ports.values():
+        p.relativePosition = (
+            (p.relativePosition[0]),
+            1 - p.relativePosition[1],
+        )
+        p.normal = (p.normal[0], p.normal[1] * -1)
+    return</code></pre>
+</details>
+</dd>
+<dt id="pyflowsheet.core.unitoperation.UnitOperation.getNormalLength"><code class="name flex">
+<span>def <span class="ident">getNormalLength</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getNormalLength(self):
+    a = radians(self.rotation)
+    return 20 * sin(a)</code></pre>
+</details>
+</dd>
+<dt id="pyflowsheet.core.unitoperation.UnitOperation.getTextAnchor"><code class="name flex">
+<span>def <span class="ident">getTextAnchor</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getTextAnchor(self):
+
+    x = 0
+    y = 0
+    align = &#34;middle&#34;
+    if self.horizontalLabelAlignment == HorizontalLabelAlignment.Center:
+        x = self.position[0] + self.size[0] / 2
+    if self.horizontalLabelAlignment == HorizontalLabelAlignment.LeftOuter:
+        x = self.position[0]
+        align = &#34;end&#34;
+    if self.horizontalLabelAlignment == HorizontalLabelAlignment.Left:
+        x = self.position[0]
+        align = &#34;start&#34;
+    if self.horizontalLabelAlignment == HorizontalLabelAlignment.RightOuter:
+        x = self.position[0] + self.size[0]
+        align = &#34;start&#34;
+    if self.horizontalLabelAlignment == HorizontalLabelAlignment.Right:
+        x = self.position[0] + self.size[0]
+        align = &#34;end&#34;
+
+    if self.verticalLabelAlignment == VerticalLabelAlignment.Center:
+        y = self.position[1] + self.size[1] / 2
+    elif self.verticalLabelAlignment == VerticalLabelAlignment.Bottom:
+        y = self.position[1] + self.size[1]
+    elif self.verticalLabelAlignment == VerticalLabelAlignment.Top:
+        y = self.position[1]
+
+    anchor = (x + self.textOffset[0], y + self.textOffset[1])
+
+    return anchor, align</code></pre>
+</details>
+</dd>
+<dt id="pyflowsheet.core.unitoperation.UnitOperation.intersectsPoint"><code class="name flex">
+<span>def <span class="ident">intersectsPoint</span></span>(<span>self, point)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def intersectsPoint(self, point):
+
+    cx = self.position[0] + 0.5 * self.size[0]
+    cy = self.position[1] + 0.5 * self.size[1]
+    a = radians(-self.rotation)
+    x, y = point
+
+    rotatedPoint = (
+        (x * cos(a) - y * sin(a) - cx * cos(a) + cy * sin(a) + cx),
+        (x * sin(a) + y * cos(a) - cx * sin(a) - cy * cos(a) + cy),
+    )
+
+    test_x = (
+        rotatedPoint[0] &gt;= self.position[0]
+        and rotatedPoint[0] &lt;= self.position[0] + self.size[0]
+    )
+    test_y = (
+        rotatedPoint[1] &gt;= self.position[1]
+        and rotatedPoint[1] &lt;= self.position[1] + self.size[1]
+    )
+    return test_x and test_y</code></pre>
+</details>
+</dd>
+<dt id="pyflowsheet.core.unitoperation.UnitOperation.rotate"><code class="name flex">
+<span>def <span class="ident">rotate</span></span>(<span>self, angle)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def rotate(self, angle):
+
+    deltaAngle = angle - self.rotation
+
+    self.rotation = angle
+    for p in self.ports.values():
+        x = p.relativePosition[0] * self.size[0]
+        y = p.relativePosition[1] * self.size[1]
+        nx = p.normal[0]
+        ny = p.normal[1]
+
+        cx = 0.5 * self.size[0]
+        cy = 0.5 * self.size[1]
+        a = radians(deltaAngle)
+        p.relativePosition = (
+            (x * cos(a) - y * sin(a) - cx * cos(a) + cy * sin(a) + cx)
+            / self.size[0],
+            (x * sin(a) + y * cos(a) - cx * sin(a) - cy * cos(a) + cy)
+            / self.size[1],
+        )
+        p.normal = (nx * cos(a) - ny * sin(a), nx * sin(a) + ny * cos(a))</code></pre>
+</details>
+</dd>
+<dt id="pyflowsheet.core.unitoperation.UnitOperation.setTextAnchor"><code class="name flex">
+<span>def <span class="ident">setTextAnchor</span></span>(<span>self, horizontal, vertical, offset=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setTextAnchor(self, horizontal, vertical, offset=None):
+
+    if offset != None:
+        self.textOffset = offset
+    self.horizontalLabelAlignment = horizontal
+    self.verticalLabelAlignment = vertical
+    return</code></pre>
+</details>
+</dd>
+<dt id="pyflowsheet.core.unitoperation.UnitOperation.updatePorts"><code class="name flex">
+<span>def <span class="ident">updatePorts</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def updatePorts(self):
+    self.ports = {}
+    return</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="pyflowsheet.core" href="index.html">pyflowsheet.core</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="pyflowsheet.core.unitoperation.UnitOperation" href="#pyflowsheet.core.unitoperation.UnitOperation">UnitOperation</a></code></h4>
+<ul class="two-column">
+<li><code><a title="pyflowsheet.core.unitoperation.UnitOperation.addInternals" href="#pyflowsheet.core.unitoperation.UnitOperation.addInternals">addInternals</a></code></li>
+<li><code><a title="pyflowsheet.core.unitoperation.UnitOperation.draw" href="#pyflowsheet.core.unitoperation.UnitOperation.draw">draw</a></code></li>
+<li><code><a title="pyflowsheet.core.unitoperation.UnitOperation.drawTextLayer" href="#pyflowsheet.core.unitoperation.UnitOperation.drawTextLayer">drawTextLayer</a></code></li>
+<li><code><a title="pyflowsheet.core.unitoperation.UnitOperation.flip" href="#pyflowsheet.core.unitoperation.UnitOperation.flip">flip</a></code></li>
+<li><code><a title="pyflowsheet.core.unitoperation.UnitOperation.flipHorizontal" href="#pyflowsheet.core.unitoperation.UnitOperation.flipHorizontal">flipHorizontal</a></code></li>
+<li><code><a title="pyflowsheet.core.unitoperation.UnitOperation.flipVertical" href="#pyflowsheet.core.unitoperation.UnitOperation.flipVertical">flipVertical</a></code></li>
+<li><code><a title="pyflowsheet.core.unitoperation.UnitOperation.getNormalLength" href="#pyflowsheet.core.unitoperation.UnitOperation.getNormalLength">getNormalLength</a></code></li>
+<li><code><a title="pyflowsheet.core.unitoperation.UnitOperation.getTextAnchor" href="#pyflowsheet.core.unitoperation.UnitOperation.getTextAnchor">getTextAnchor</a></code></li>
+<li><code><a title="pyflowsheet.core.unitoperation.UnitOperation.intersectsPoint" href="#pyflowsheet.core.unitoperation.UnitOperation.intersectsPoint">intersectsPoint</a></code></li>
+<li><code><a title="pyflowsheet.core.unitoperation.UnitOperation.rotate" href="#pyflowsheet.core.unitoperation.UnitOperation.rotate">rotate</a></code></li>
+<li><code><a title="pyflowsheet.core.unitoperation.UnitOperation.setTextAnchor" href="#pyflowsheet.core.unitoperation.UnitOperation.setTextAnchor">setTextAnchor</a></code></li>
+<li><code><a title="pyflowsheet.core.unitoperation.UnitOperation.updatePorts" href="#pyflowsheet.core.unitoperation.UnitOperation.updatePorts">updatePorts</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>

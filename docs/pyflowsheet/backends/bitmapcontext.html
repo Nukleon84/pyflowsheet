@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.2" />
-<title>pyflowsheet API documentation</title>
+<title>pyflowsheet.backends.bitmapcontext API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,66 +19,169 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Package <code>pyflowsheet</code></h1>
+<h1 class="title">Module <code>pyflowsheet.backends.bitmapcontext</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from .core import Flowsheet
-from .core import UnitOperation
-from .core import Stream
-from .core import Port
+<pre><code class="python">import importlib.util
 
-from .core.enums import VerticalLabelAlignment, HorizontalLabelAlignment
+package_name = &#34;pillow&#34;
+spec = importlib.util.find_spec(package_name)
+
+if spec is None:
+    Warning(&#34;Pillow is not installed. You cannot render to the bitmap context!&#34;)
+    PYFLOWSHEET_PILLOW_MISSING = True
+else:
+    from PIL import Image, ImageDraw
+
+    PYFLOWSHEET_PILLOW_MISSING = False
 
 
-from .unitoperations import Distillation
-from .unitoperations import Vessel
-from .unitoperations import BlackBox
-from .unitoperations import Pump
-from .unitoperations import Valve
-from .unitoperations import StreamFlag
-from .unitoperations import HeatExchanger
-from .unitoperations import Mixer
-from .unitoperations import Splitter
-from .unitoperations import Compressor
+class BitmapContext(object):
+    def __init__(self, size):
 
-from .annotations import TextElement
-from .backends import SvgContext</code></pre>
+        if PYFLOWSHEET_PILLOW_MISSING:
+            Warning(&#34;Pillow is not installed. You cannot render to the bitmap context!&#34;)
+        self.img = Image.new(&#34;RGBA&#34;, size, (255, 255, 255, 255))
+        self.draw = ImageDraw.Draw(self.img)
+
+    def rectangle(self, rect, fillColor, lineColor, lineSize):
+        self.draw.rectangle(rect, fillColor, lineColor, lineSize)
+        return
+
+    def chord(self, rect, start, end, fillColor, lineColor, lineSize):
+        self.draw.chord(rect, start, end, fillColor, lineColor, width=lineSize)
+        return
+
+    def circle(self, rect, fillColor, lineColor, lineSize):
+        return
+
+    def text(self, x, y, text, fontFamily, textColor):
+        return
+
+    def render(self):
+        return self.img</code></pre>
 </details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt><code class="name"><a title="pyflowsheet.annotations" href="annotations/index.html">pyflowsheet.annotations</a></code></dt>
+<dt id="pyflowsheet.backends.bitmapcontext.BitmapContext"><code class="flex name class">
+<span>class <span class="ident">BitmapContext</span></span>
+<span>(</span><span>size)</span>
+</code></dt>
 <dd>
 <div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class BitmapContext(object):
+    def __init__(self, size):
+
+        if PYFLOWSHEET_PILLOW_MISSING:
+            Warning(&#34;Pillow is not installed. You cannot render to the bitmap context!&#34;)
+        self.img = Image.new(&#34;RGBA&#34;, size, (255, 255, 255, 255))
+        self.draw = ImageDraw.Draw(self.img)
+
+    def rectangle(self, rect, fillColor, lineColor, lineSize):
+        self.draw.rectangle(rect, fillColor, lineColor, lineSize)
+        return
+
+    def chord(self, rect, start, end, fillColor, lineColor, lineSize):
+        self.draw.chord(rect, start, end, fillColor, lineColor, width=lineSize)
+        return
+
+    def circle(self, rect, fillColor, lineColor, lineSize):
+        return
+
+    def text(self, x, y, text, fontFamily, textColor):
+        return
+
+    def render(self):
+        return self.img</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="pyflowsheet.backends.bitmapcontext.BitmapContext.chord"><code class="name flex">
+<span>def <span class="ident">chord</span></span>(<span>self, rect, start, end, fillColor, lineColor, lineSize)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def chord(self, rect, start, end, fillColor, lineColor, lineSize):
+    self.draw.chord(rect, start, end, fillColor, lineColor, width=lineSize)
+    return</code></pre>
+</details>
 </dd>
-<dt><code class="name"><a title="pyflowsheet.backends" href="backends/index.html">pyflowsheet.backends</a></code></dt>
+<dt id="pyflowsheet.backends.bitmapcontext.BitmapContext.circle"><code class="name flex">
+<span>def <span class="ident">circle</span></span>(<span>self, rect, fillColor, lineColor, lineSize)</span>
+</code></dt>
 <dd>
 <div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def circle(self, rect, fillColor, lineColor, lineSize):
+    return</code></pre>
+</details>
 </dd>
-<dt><code class="name"><a title="pyflowsheet.core" href="core/index.html">pyflowsheet.core</a></code></dt>
+<dt id="pyflowsheet.backends.bitmapcontext.BitmapContext.rectangle"><code class="name flex">
+<span>def <span class="ident">rectangle</span></span>(<span>self, rect, fillColor, lineColor, lineSize)</span>
+</code></dt>
 <dd>
 <div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def rectangle(self, rect, fillColor, lineColor, lineSize):
+    self.draw.rectangle(rect, fillColor, lineColor, lineSize)
+    return</code></pre>
+</details>
 </dd>
-<dt><code class="name"><a title="pyflowsheet.internals" href="internals/index.html">pyflowsheet.internals</a></code></dt>
+<dt id="pyflowsheet.backends.bitmapcontext.BitmapContext.render"><code class="name flex">
+<span>def <span class="ident">render</span></span>(<span>self)</span>
+</code></dt>
 <dd>
 <div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def render(self):
+    return self.img</code></pre>
+</details>
 </dd>
-<dt><code class="name"><a title="pyflowsheet.unitoperations" href="unitoperations/index.html">pyflowsheet.unitoperations</a></code></dt>
+<dt id="pyflowsheet.backends.bitmapcontext.BitmapContext.text"><code class="name flex">
+<span>def <span class="ident">text</span></span>(<span>self, x, y, text, fontFamily, textColor)</span>
+</code></dt>
 <dd>
 <div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def text(self, x, y, text, fontFamily, textColor):
+    return</code></pre>
+</details>
 </dd>
 </dl>
-</section>
-<section>
-</section>
-<section>
-</section>
-<section>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -87,13 +190,23 @@ from .backends import SvgContext</code></pre>
 <ul></ul>
 </div>
 <ul id="index">
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<li><h3>Super-module</h3>
 <ul>
-<li><code><a title="pyflowsheet.annotations" href="annotations/index.html">pyflowsheet.annotations</a></code></li>
-<li><code><a title="pyflowsheet.backends" href="backends/index.html">pyflowsheet.backends</a></code></li>
-<li><code><a title="pyflowsheet.core" href="core/index.html">pyflowsheet.core</a></code></li>
-<li><code><a title="pyflowsheet.internals" href="internals/index.html">pyflowsheet.internals</a></code></li>
-<li><code><a title="pyflowsheet.unitoperations" href="unitoperations/index.html">pyflowsheet.unitoperations</a></code></li>
+<li><code><a title="pyflowsheet.backends" href="index.html">pyflowsheet.backends</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="pyflowsheet.backends.bitmapcontext.BitmapContext" href="#pyflowsheet.backends.bitmapcontext.BitmapContext">BitmapContext</a></code></h4>
+<ul class="">
+<li><code><a title="pyflowsheet.backends.bitmapcontext.BitmapContext.chord" href="#pyflowsheet.backends.bitmapcontext.BitmapContext.chord">chord</a></code></li>
+<li><code><a title="pyflowsheet.backends.bitmapcontext.BitmapContext.circle" href="#pyflowsheet.backends.bitmapcontext.BitmapContext.circle">circle</a></code></li>
+<li><code><a title="pyflowsheet.backends.bitmapcontext.BitmapContext.rectangle" href="#pyflowsheet.backends.bitmapcontext.BitmapContext.rectangle">rectangle</a></code></li>
+<li><code><a title="pyflowsheet.backends.bitmapcontext.BitmapContext.render" href="#pyflowsheet.backends.bitmapcontext.BitmapContext.render">render</a></code></li>
+<li><code><a title="pyflowsheet.backends.bitmapcontext.BitmapContext.text" href="#pyflowsheet.backends.bitmapcontext.BitmapContext.text">text</a></code></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

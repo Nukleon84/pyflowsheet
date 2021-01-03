@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.2" />
-<title>pyflowsheet API documentation</title>
+<title>pyflowsheet.annotations.textelement API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,66 +19,119 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Package <code>pyflowsheet</code></h1>
+<h1 class="title">Module <code>pyflowsheet.annotations.textelement</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from .core import Flowsheet
-from .core import UnitOperation
-from .core import Stream
-from .core import Port
-
-from .core.enums import VerticalLabelAlignment, HorizontalLabelAlignment
+<pre><code class="python">from ..core import UnitOperation
+from ..core.enums import HorizontalLabelAlignment, VerticalLabelAlignment
 
 
-from .unitoperations import Distillation
-from .unitoperations import Vessel
-from .unitoperations import BlackBox
-from .unitoperations import Pump
-from .unitoperations import Valve
-from .unitoperations import StreamFlag
-from .unitoperations import HeatExchanger
-from .unitoperations import Mixer
-from .unitoperations import Splitter
-from .unitoperations import Compressor
+class TextElement(UnitOperation):
+    def __init__(self, text, position=(0, 0)):
+        super().__init__(&#34;text&#34;, &#34;text&#34;, position=position, size=(20, 20))
+        self.text = text
+        self.drawBoundingBox = False
+        self.showTitle = False
+        self.fontFamily = &#34;Consolas&#34;
+        return
 
-from .annotations import TextElement
-from .backends import SvgContext</code></pre>
+    def draw(self, ctx):
+        # html = self.data.to_html()
+        # ctx.html(html, self.position, self.size)
+
+        ctx.text(
+            self.position,
+            text=self.text,
+            fontFamily=self.fontFamily,
+            textColor=self.textColor,
+            textAnchor=&#34;start&#34;,
+        )
+        # super().draw(ctx)
+
+        return</code></pre>
 </details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt><code class="name"><a title="pyflowsheet.annotations" href="annotations/index.html">pyflowsheet.annotations</a></code></dt>
+<dt id="pyflowsheet.annotations.textelement.TextElement"><code class="flex name class">
+<span>class <span class="ident">TextElement</span></span>
+<span>(</span><span>text, position=(0, 0))</span>
+</code></dt>
 <dd>
 <div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="pyflowsheet.backends" href="backends/index.html">pyflowsheet.backends</a></code></dt>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TextElement(UnitOperation):
+    def __init__(self, text, position=(0, 0)):
+        super().__init__(&#34;text&#34;, &#34;text&#34;, position=position, size=(20, 20))
+        self.text = text
+        self.drawBoundingBox = False
+        self.showTitle = False
+        self.fontFamily = &#34;Consolas&#34;
+        return
+
+    def draw(self, ctx):
+        # html = self.data.to_html()
+        # ctx.html(html, self.position, self.size)
+
+        ctx.text(
+            self.position,
+            text=self.text,
+            fontFamily=self.fontFamily,
+            textColor=self.textColor,
+            textAnchor=&#34;start&#34;,
+        )
+        # super().draw(ctx)
+
+        return</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pyflowsheet.core.unitoperation.UnitOperation" href="../core/unitoperation.html#pyflowsheet.core.unitoperation.UnitOperation">UnitOperation</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="pyflowsheet.annotations.textelement.TextElement.draw"><code class="name flex">
+<span>def <span class="ident">draw</span></span>(<span>self, ctx)</span>
+</code></dt>
 <dd>
 <div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="pyflowsheet.core" href="core/index.html">pyflowsheet.core</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="pyflowsheet.internals" href="internals/index.html">pyflowsheet.internals</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="pyflowsheet.unitoperations" href="unitoperations/index.html">pyflowsheet.unitoperations</a></code></dt>
-<dd>
-<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def draw(self, ctx):
+    # html = self.data.to_html()
+    # ctx.html(html, self.position, self.size)
+
+    ctx.text(
+        self.position,
+        text=self.text,
+        fontFamily=self.fontFamily,
+        textColor=self.textColor,
+        textAnchor=&#34;start&#34;,
+    )
+    # super().draw(ctx)
+
+    return</code></pre>
+</details>
 </dd>
 </dl>
-</section>
-<section>
-</section>
-<section>
-</section>
-<section>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -87,13 +140,19 @@ from .backends import SvgContext</code></pre>
 <ul></ul>
 </div>
 <ul id="index">
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<li><h3>Super-module</h3>
 <ul>
-<li><code><a title="pyflowsheet.annotations" href="annotations/index.html">pyflowsheet.annotations</a></code></li>
-<li><code><a title="pyflowsheet.backends" href="backends/index.html">pyflowsheet.backends</a></code></li>
-<li><code><a title="pyflowsheet.core" href="core/index.html">pyflowsheet.core</a></code></li>
-<li><code><a title="pyflowsheet.internals" href="internals/index.html">pyflowsheet.internals</a></code></li>
-<li><code><a title="pyflowsheet.unitoperations" href="unitoperations/index.html">pyflowsheet.unitoperations</a></code></li>
+<li><code><a title="pyflowsheet.annotations" href="index.html">pyflowsheet.annotations</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="pyflowsheet.annotations.textelement.TextElement" href="#pyflowsheet.annotations.textelement.TextElement">TextElement</a></code></h4>
+<ul class="">
+<li><code><a title="pyflowsheet.annotations.textelement.TextElement.draw" href="#pyflowsheet.annotations.textelement.TextElement.draw">draw</a></code></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
