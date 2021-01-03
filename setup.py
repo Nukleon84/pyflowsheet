@@ -17,7 +17,7 @@ def read(fname):
 
 setup(
     name="pyflowsheet",
-    version="0.1.1",
+    version="0.2.0",
     description="A Python library for creating process flow diagrams (PFD) for process engineering using SVG drawings.",
     author=AUTHOR_NAME,
     email=AUTHOR_EMAIL,
