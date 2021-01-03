@@ -41,6 +41,9 @@ If you want to install the optional dependency Matplotlib you can instead instal
 * Valve
 * Distillation Column
 * Pump
+* Compressor
+
+![All unit operations](img/unit_operations_example.svg)
 
 The following annotation objects are available:
 * Callout (simple text element)
@@ -122,7 +125,8 @@ SVG(img.render(scale=1))
 In the pyflowsheet package, you have the option to draw distillation towers with simplified peripherals (condenser and reboiler) in one icon, or you can define the periphery in more detail with individual unit operations.
 
 ```python
-from pyflowsheet import Flowsheet, UnitOperation, Distillation, Vessel, BlackBox, Pump, Stream, StreamFlag, Valve,HeatExchanger, Mixer, Splitter, Port,BitmapContext, SvgContext
+from pyflowsheet import Flowsheet, UnitOperation, Distillation, Vessel, BlackBox, Pump, Stream, StreamFlag, Valve,HeatExchanger, Mixer, Splitter, Port, SvgContext
+from pyflowsheet.internals import Tubes,RandomPacking
 from IPython.core.display import SVG, HTML
 from pyflowsheet import VerticalLabelAlignment, HorizontalLabelAlignment
 
@@ -130,20 +134,24 @@ pfd= Flowsheet("V100-DS10","Complex Distillation", "Demo Flowsheet for testing e
 
 Feed= StreamFlag("Feed", "Feed", position=(0,250))
 HX1=HeatExchanger("Preheater","Pre-Heater", position=(160,250))
-TWR1=Distillation("Tower","Distillation Tower", hasCondenser=False, hasReboiler=False,position=(300,120), size=(40,300), internals="packing")
+TWR1=Distillation("Tower","Distillation Tower", hasCondenser=False, hasReboiler=False,position=(300,120), size=(40,300), internals=[RandomPacking(start=0, end=0.4),RandomPacking(start=0.6, end=1.0)])
 MX1= Mixer("MX1", "Mixer", position=(400,450))
 SP1= Splitter("SP1", "Splitter", position=(460,450))
-REB=Vessel("Reboiler","Falling Film Evaporator", position=(390,340), size=(40,80),capLength=20,internals="Tubes")
+REB=Vessel("Reboiler","Falling Film Evaporator", position=(390,340), size=(40,80),capLength=20,internals=[Tubes(7)] )
 REB.ports["Out2"] = Port("Out2", REB, (0, .25), (-1, 0), intent="out")
-COND=Vessel("Condenser","Condenser", position=(390,40), orientation="horizontal", size=(100,40), internals="tubes")
-COND.ports["Out2"] = Port("Out2", COND, (0.85, 0), (0, -1), intent="out")
+COND=Vessel("Condenser","Condenser", position=(390,40), size=(40,100), internals=[Tubes()])
+COND.ports["Out2"] = Port("Out2", COND, (0, 0.15), (-1, 0), intent="out")
+
+
 SP2= Splitter("SP2", "Reflux-Splitter", position=(500,130))
 P1= StreamFlag("P1", "Product 1", position=(560,120))
 P2= StreamFlag("P2", "Product 2", position=(0,400))
 P3= StreamFlag("P3", "Product 3", position=(560,0))
 
 #rotate units to resemble the actual plant layout
-COND.rotate(15)
+
+COND.rotate(105)
+
 SP2.rotate(90)
 P2.flip(axis="horizontal")
 REB.flip(axis="vertical")
@@ -179,7 +187,7 @@ REB.setTextAnchor(HorizontalLabelAlignment.RightOuter,VerticalLabelAlignment.Cen
 
 ctx= SvgContext("img/externalized_column_with_preheater.svg")
 img = pfd.draw(ctx)
-SVG(img.render(scale=1))
+SVG(img.render(width=1280, height=640 ))
 ```
 ![Externalized column demo](img/externalized_column_with_preheater.svg)
 
@@ -191,6 +199,7 @@ You can embed matplotlib plots and pandas tables into the SVG graphic with the h
 
 ```python
 from pyflowsheet import Flowsheet, UnitOperation, Distillation, Vessel, BlackBox, Pump, Stream, StreamFlag, Valve,HeatExchanger, SvgContext, Table, Figure, TextElement
+from pyflowsheet.internals import Tubes,RandomPacking
 from IPython.core.display import SVG, HTML
 
 import matplotlib.pyplot as plt
@@ -203,7 +212,7 @@ plt.ioff()
 pfd= Flowsheet("V100-DS20","Simple Distillation", "Demo Flowsheet for testing functionality")
 
 Feed= StreamFlag("Feed", "Feed", position=(0,400))
-HX=Vessel("HX","Condenser", position=(260,200), orientation="vertical", size=(40,140), internals="tubes")
+HX=Vessel("HX","Condenser", position=(260,200),  size=(40,140), internals=[Tubes()])
 P2= StreamFlag("P2", "Product 2", position=(300,000))
 
 pfd.addUnits( [Feed,HX,P2] )

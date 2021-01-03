@@ -1,5 +1,7 @@
 from .tubes import Tubes
 from .catalystBed import CatalystBed
+from .baffles import Baffles
+from .discdonutbaffles import DiscDonutBaffles
 
 from .trays import Trays
 from .dividingWall import DividingWall

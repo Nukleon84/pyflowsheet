@@ -13,12 +13,24 @@ The essence of semantic versioning is a 3-part MAJOR.MINOR.MAINTENANCE numbering
 
 # History
 
-## Version 0.1.2
+## Version 0.2.0 (03-01-2021)
 
 **New Features**
+* Added an "Internals" System. You can now add any instance derived from BaseInternal to the internals list of a unit operation. These internals can represent tubes in a heat exchanger, trays or packing in a column, or special realisations of pumps and compressors. 
+
+  **Breaking Change**: It is not possible to define internals by a string anymore.
+```python 
+U3=pfd.unit(Vessel("Fermenter","Fermenter", position=(200,190), capLength=20, showCapLines=False, size=(80,140),internals=[Stirrer(type=StirrerType.Anchor), Jacket()] ))
+```
+* Changed how vertical/horizontal vessels work: Now every vessel is vertical by default, but can be rotated either with the rotate(angle) method or by passing the angle as parameter into the constructor.
+```python
+BA11=Vessel("DS10-BA11","Horizontal Vessel", angle=90, position=(560,400), size=(40,100), capLength=20,internals=[CatalystBed()] )
+```
+* Compressor unit operation
 
 **Bugfixes**
 * Multiple calls to .rotate(angle) do not rotate the ports anymore while keeping the unit itself at the same angle.
+* Rotating a unit now influences the area that is blocked for pathfinding.
 
 
 
