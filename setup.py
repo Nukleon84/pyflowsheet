@@ -2,7 +2,7 @@
 # License: MIT License
 # Copyright (C) 2020 Jochen Steimel
 import os
-from setuptools import setup
+from setuptools import setup, find_packages
 
 AUTHOR_NAME = "Jochen Steimel"
 AUTHOR_EMAIL = "jochen.steimel@googlemail.com"
@@ -17,13 +17,13 @@ def read(fname):
 
 setup(
     name="pyflowsheet",
-    version="0.2.0",
+    version="0.2.1",
     description="A Python library for creating process flow diagrams (PFD) for process engineering using SVG drawings.",
     author=AUTHOR_NAME,
     email=AUTHOR_EMAIL,
     url="https://github.com/nukleon84/pyflowsheet",
     python_requires=">=3.7",
-    packages=["pyflowsheet"],
+    packages=find_packages(),
     provides=["pyflowsheet"],
     long_description=read("readme.md") + read("changelog.md"),
     long_description_content_type="text/markdown",

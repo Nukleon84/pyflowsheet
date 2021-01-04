@@ -13,6 +13,10 @@ The essence of semantic versioning is a 3-part MAJOR.MINOR.MAINTENANCE numbering
 
 # History
 
+## Version 0.2.1 (04-01-2021)
+
+* Version 0.2.0 was not running after restructuring of source files. Restored package by adding all submodules correctly in setup.py
+
 ## Version 0.2.0 (03-01-2021)
 
 **New Features**
