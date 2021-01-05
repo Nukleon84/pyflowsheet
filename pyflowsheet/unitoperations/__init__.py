@@ -8,3 +8,4 @@ from .vessel import Vessel
 from .valve import Valve
 from .streamflag import StreamFlag
 from .compressor import Compressor
+from .platehex import PlateHex

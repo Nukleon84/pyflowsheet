@@ -13,3 +13,8 @@ class VerticalLabelAlignment(Enum):
     Top = auto()
     Center = auto()
     Bottom = auto()
+
+
+class FlowPattern(Enum):
+    CoCurrent = auto()
+    CounterCurrent = auto()

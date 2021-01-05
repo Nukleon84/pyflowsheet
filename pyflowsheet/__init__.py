@@ -16,6 +16,7 @@ from .unitoperations import HeatExchanger
 from .unitoperations import Mixer
 from .unitoperations import Splitter
 from .unitoperations import Compressor
+from .unitoperations import PlateHex
 
 from .annotations import TextElement
 from .backends import SvgContext

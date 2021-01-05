@@ -3,7 +3,7 @@ class Port(object):
         self.name = name
         self.relativePosition = rel_pos
         self.normal = normal
-        self.size = (10, 10)
+        self.size = (6, 6)
         self.fillColor = None
         self.lineColor = (0, 0, 255, 255)
         self.lineSize = 1

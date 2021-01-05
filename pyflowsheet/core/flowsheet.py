@@ -26,6 +26,7 @@ class Flowsheet(object):
         self.annotations = []
         self.streams = {}
         self.showGrid = False
+        self.showPorts = False
 
     def addAnnotations(self, elements):
         for e in elements:
@@ -184,7 +185,7 @@ class Flowsheet(object):
             ctx.startTransformedGroup(u)
             u.draw(ctx)
             ctx.endGroup()
-            u.drawTextLayer(ctx)
+            u.drawTextLayer(ctx, self.showPorts)
             ctx.endGroup()
 
         for e in self.annotations:

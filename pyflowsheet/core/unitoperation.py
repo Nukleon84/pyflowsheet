@@ -41,6 +41,10 @@ class UnitOperation(object):
             internal.parent = self
             self.internals.append(internal)
 
+    def addPort(self, port):
+        self.ports[port.name] = port
+        return
+
     def updatePorts(self):
         self.ports = {}
         return
@@ -183,9 +187,11 @@ class UnitOperation(object):
 
         return anchor, align
 
-    def drawTextLayer(self, ctx):
-        # for p in self.ports.values():
-        #    p.draw(ctx)
+    def drawTextLayer(self, ctx, showPorts=False):
+        if showPorts:
+            for p in self.ports.values():
+                p.draw(ctx)
+
         if self.showTitle:
             insert, align = self.getTextAnchor()
             ctx.text(
